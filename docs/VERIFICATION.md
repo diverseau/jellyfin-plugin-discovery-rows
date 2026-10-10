@@ -59,10 +59,16 @@ Additional live checks confirm that disabling a shelf is honored even with old H
 
 Screenshots and raw compact reports were captured under ignored `work/screenshots/` and `work/*verification.json`. A review copy of the main screenshots/report accompanies the final artifact outputs.
 
+## Hosted repository installation
+
+The public [repository manifest](https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json) and [release archive](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.0) were retrieved anonymously. Both the Jellyfin MD5 checksum and the release SHA-256 matched the published ZIP.
+
+On the disposable Jellyfin 10.11.11 fixture, Discovery Rows was removed while stopped, the public repository was added through the same repository API used by the dashboard, and the Catalogue resolved version 1.0.0.0. The normal package installation endpoint downloaded and extracted the release with matching runtime-file hashes. After restart, Jellyfin reported the plugin Active, all 38 HSS shelves registered, labels initialized and the preferences page available. Nine checks passed; [repository-verification.json](repository-verification.json) records the results without credentials.
+
 ## Limits and future work
 
 This release supports stable Jellyfin Web shelves. It does not automatically choose/reorder the whole page, coordinate unrelated HSS shelves, run a local classifier, claim Netflix algorithms, or certify independently implemented native clients. English shelf labels are seeded as safe fallbacks; translated wording and Jellyfin 12 builds remain future work.
 
 Runtime promises remain conservative when a card offers several editions: every known selectable version must fit. Unknown or ambiguous metadata excludes factual shelves. Editorial and award truth still depends on administrators supplying reviewed evidence; the plugin verifies structure, provenance fields and work linkage rather than independently judging every imported claim.
 
-The deployed production server/library was never accessed or altered. This is an installable local release with a documented exact-stack test fixture, not an automatic production deployment or public release publication.
+The deployed production server/library was never accessed or altered. This is a published installable release with a documented exact-stack test fixture. Production installation remains the user's choice.

@@ -1,0 +1,40 @@
+{
+  "repositoryUrl": "https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json",
+  "sourceUrl": "https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/download/v1.0.0/DiscoveryRows-1.0.0.0-jellyfin-10.11.11.zip",
+  "version": "1.0.0.0",
+  "targetAbi": "10.11.11.0",
+  "md5": "94824714251e05e54cc0e873be16e659",
+  "sha256": "13706e0e33f0eb4634bff18178d51eb6a70ae21cbd96dd90c3310ff928dc9fc4",
+  "checks": [
+    "anonymous manifest has expected GUID and compatible version",
+    "anonymous download matches Jellyfin MD5",
+    "anonymous download matches release SHA256",
+    "fixture starts without Discovery Rows",
+    "Jellyfin catalogue resolves public repository",
+    "catalogue installation extracts release assemblies",
+    "restarted Jellyfin loads catalogue-installed version",
+    "catalogue-installed plugin registers 38 HSS shelves",
+    "catalogue-installed plugin restores preferences page"
+  ],
+  "status": {
+    "pluginVersion": "1.0.0",
+    "jellyfinTarget": "10.11.11",
+    "hssTarget": "3.0.2.0",
+    "hssStatus": "Registered; HSS settings must be saved to enable shelves",
+    "registeredRows": 38,
+    "labelsReady": true,
+    "layoutAvailable": false,
+    "preferencesPageReady": true,
+    "indexRevision": 0,
+    "indexedTitles": 0,
+    "indexedAt": "0001-01-01T00:00:00+00:00",
+    "indexDirty": true,
+    "evidenceRecords": 2,
+    "hasTmdbToken": false,
+    "enrichmentStatus": "Optional enrichment has not run",
+    "providerRequests": 0,
+    "cachedUsers": 0,
+    "requests": 0,
+    "lastHandlerMilliseconds": 0
+  }
+}

@@ -8,3 +8,5 @@ artifacts/
 !.env.example
 *.user
 *.suo
+__pycache__/
+*.pyc
