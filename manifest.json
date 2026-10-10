@@ -1,0 +1,20 @@
+[
+  {
+    "guid": "b87d3d47-7a2d-43c6-89d2-592885b90d3e",
+    "name": "Discovery Rows",
+    "overview": "Time, mood, awards and personal discovery shelves for Home Screen Sections.",
+    "description": "Adds 38 discovery shelves for local playable media. Includes time-based picks, reviewed moods, awards, complete stories, personal exclusions and administrator previews. Requires Jellyfin 10.11.11 and Home Screen Sections 3.0.2.0 with File Transformation and Plugin Pages. Mood and award shelves require reviewed evidence; optional TMDB enrichment is configured separately.",
+    "owner": "diverseau",
+    "category": "General",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/download/v1.0.0/DiscoveryRows-1.0.0.0-jellyfin-10.11.11.zip",
+        "checksum": "94824714251e05e54cc0e873be16e659",
+        "timestamp": "2026-10-10T20:44:21.710375+00:00",
+        "changelog": "Initial release: 38 HSS shelves, offline eligibility, reviewed evidence, optional background TMDB enrichment, administrator tools and per-user preferences. Tested on Jellyfin 10.11.11 with HSS 3.0.2.0."
+      }
+    ]
+  }
+]
