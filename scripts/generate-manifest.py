@@ -7,13 +7,18 @@ import json
 import pathlib
 import urllib.parse
 import zipfile
+import xml.etree.ElementTree as ET
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--archive", type=pathlib.Path, required=True)
 parser.add_argument("--source-url", required=True)
 parser.add_argument("--output", type=pathlib.Path, default=pathlib.Path("manifest.json"))
 parser.add_argument("--timestamp", help="UTC ISO timestamp; defaults to now")
+parser.add_argument("--changelog", required=True)
+parser.add_argument("--previous", type=pathlib.Path, default=pathlib.Path("manifest.json"), help="Retain earlier releases from this manifest")
 args = parser.parse_args()
+root = pathlib.Path(__file__).resolve().parents[1]
+version = ET.parse(root / "Directory.Build.props").findtext(".//Version") + ".0"
 url = urllib.parse.urlparse(args.source_url)
 if url.scheme != "https" or not url.netloc or not url.path.endswith(".zip"):
     parser.error("source-url must be an HTTPS URL ending in .zip")
@@ -35,13 +40,19 @@ manifest = [{
     "owner": "diverseau",
     "category": "General",
     "versions": [{
-        "version": "1.0.0.0",
+        "version": version,
         "targetAbi": "10.11.11.0",
         "sourceUrl": args.source_url,
         "checksum": hashlib.md5(args.archive.read_bytes()).hexdigest(),
         "timestamp": timestamp,
-        "changelog": "Initial release: 38 HSS shelves, offline eligibility, reviewed evidence, optional background TMDB enrichment, administrator tools and per-user preferences. Tested on Jellyfin 10.11.11 with HSS 3.0.2.0."
+        "changelog": args.changelog
     }]
 }]
+if args.previous.exists():
+    previous = json.loads(args.previous.read_text())
+    prior = next((p for p in previous if p["guid"] == manifest[0]["guid"]), None)
+    if prior:
+        manifest[0]["versions"].extend(v for v in prior["versions"] if v["version"] != version)
+        manifest[0]["versions"].sort(key=lambda v: tuple(map(int, v["version"].split("."))), reverse=True)
 args.output.write_text(json.dumps(manifest, indent=2) + "\n")
 print(f"Generated {args.output} from {args.archive}")

@@ -86,6 +86,12 @@ known = {s["SectionId"] for s in hss_all["SectionSettings"]}
 for n, section in enumerate(ours, 20):
     if section["Section"] not in known:
         hss_all["SectionSettings"].append({"SectionId": section["Section"], "Enabled": True, "AllowUserOverride": True, "LowerLimit": 1, "UpperLimit": 1, "OrderIndex": n, "ViewMode": "Portrait", "HideWatchedItems": False, "PluginConfigurations": []})
+# Exercise evidence shelves even when an existing fixture user's saved selection
+# omits them. Restore the administrator's original HSS configuration afterward.
+for section in hss_all["SectionSettings"]:
+    if section["SectionId"].startswith("DiscoveryRows"):
+        section["Enabled"] = True
+        section["AllowUserOverride"] = False
 request("/Plugins/" + hss_id + "/Configuration", "POST", hss_all, expected=204)
 for section in ["DiscoveryRowsFeelGoodMovies", "DiscoveryRowsGoldenGlobes", "DiscoveryRowsOscars", "DiscoveryRowsStrongOpening", "DiscoveryRowsOneNight", "DiscoveryRowsCompleteSeries", "DiscoveryRowsFirstSeasons"]:
     items = result(section)

@@ -28,3 +28,5 @@ node dev/browser-check.cjs
 `browser-check.cjs` uses a new headless Chromium process, not the user's browser session. Set `CHROMIUM_PATH` if needed. It checks the real Jellyfin/HSS homepage, hides a deliberately underfilled row, exercises settings/preview/preferences, and starts native playback. It restores the temporarily changed configuration in `finally`. Screenshots and compact verification JSON go under ignored `work/`.
 
 Some additional one-time checks (ordinary-user Plugin Pages hide/restore and restart persistence) are recorded in the verification report. The checks cover the exact stack; they do not establish native-client or Jellyfin 12 support.
+
+`verify-startup.py` requires the retained fixture to be stopped with the current package already installed. It starts that named container, polls immediately until HTTP is available, and checks that the very first HSS layout already includes the selected discovery shelves. It reuses that cached layout after indexing and verifies the actual HSS result callback. Run `python dev/verify-startup.py`; stop the fixture afterward. It does not alter plugin or user configuration.

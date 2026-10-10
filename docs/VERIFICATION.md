@@ -1,6 +1,14 @@
-# Discovery Rows 1.0.0 verification
+# Discovery Rows 1.0.1 verification
 
 Built on **11 October 2026, Australia/Perth**, in `/home/diverse/Projects/jellyfin-plugin-discovery-rows`. This report distinguishes runtime checks from design assumptions.
+
+## Version 1.0.1 startup regression
+
+Version 1.0.0 could delay HSS registration until the background worker observed core startup completion. The first homepage request could therefore cache a layout without Discovery Rows. The reproduced sequence returned zero discovery sections both before and after registration, while a fresh page hash returned the three selected discovery sections. Library preview could still show eligible/allocated cards.
+
+Version 1.0.1 registers synchronously when the hosted service starts, before HTTP serving begins. The library index still waits for core startup, with a one-second startup retry interval. HSS's cache and private settings files are not modified. Status reports the actual assembly version and no longer repeats the instruction to save HSS settings regardless of whether they are already saved.
+
+The fixture regression test polls immediately from a stopped server. Its first available HTTP request now reports 38 registered shelves; the first HSS layout includes the selected discovery shelf, the same cached layout retains it after indexing, and the actual HSS callback returns eight eligible cards. See [startup-verification.json](startup-verification.json). This test would fail on 1.0.0. The 103 automated tests, 25 live API assertions and real browser/native playback checks also pass on 1.0.1.
 
 ## Shipped scope
 

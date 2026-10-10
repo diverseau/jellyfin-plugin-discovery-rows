@@ -1,6 +1,10 @@
-# Install Discovery Rows 1.0.0
+# Install Discovery Rows 1.0.1
 
 Supported and tested stack: **Jellyfin server/Web 10.11.11, Home Screen Sections 3.0.2.0**. The development fixture also used **File Transformation 3.0.1.0 and Plugin Pages 3.0.1.0**. Native clients and Jellyfin 12.x are not certified by this release.
+
+## Update from 1.0.0
+
+In Dashboard → Plugins → Catalogue, choose Discovery Rows and install **1.0.1.0**, then restart Jellyfin and refresh Home. Existing shelf settings, HSS selection and plugin data are retained. Version 1.0.1 registers the shelves before the first homepage request, fixing a startup timing issue that let HSS cache a layout without them. The repository URL stays the same.
 
 ## Install from the catalogue
 
@@ -11,15 +15,15 @@ Supported and tested stack: **Jellyfin server/Web 10.11.11, Home Screen Sections
    https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json
    ```
 
-3. Click **Add**, open **Catalogue**, choose **Discovery Rows**, and install **1.0.0.0**. Restart Jellyfin.
+3. Click **Add**, open **Catalogue**, choose **Discovery Rows**, and install **1.0.1.0**. Restart Jellyfin.
 4. Follow **Configure the shelves** below.
 
-The repository provides Discovery Rows only. HSS and its dependencies must be installed separately. Jellyfin validates the downloaded ZIP against the manifest's MD5; SHA-256 hashes are also included with the [release](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.0).
+The repository provides Discovery Rows only. HSS and its dependencies must be installed separately. Jellyfin validates the downloaded ZIP against the manifest's MD5; SHA-256 hashes are also included with the [release](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.1).
 
 ## Manual package installation
 
 1. Install HSS and its dependencies using [the publisher's repository](https://www.iamparadox.dev/jellyfin/plugins/manifest.json), selecting builds for Jellyfin 10.11.11. Restart Jellyfin if those were newly installed.
-2. Stop Jellyfin. Create `DiscoveryRows_1.0.0.0` inside **your server's actual plugins directory**, then extract `DiscoveryRows-1.0.0.0-jellyfin-10.11.11.zip` into it. On the official Docker image, that is `/config/plugins/DiscoveryRows_1.0.0.0`; package installs commonly use `/var/lib/jellyfin/plugins`. Use the path for your installation.
+2. Stop Jellyfin. Create `DiscoveryRows_1.0.1.0` inside **your server's actual plugins directory**, then extract `DiscoveryRows-1.0.1.0-jellyfin-10.11.11.zip` into it. On the official Docker image, that is `/config/plugins/DiscoveryRows_1.0.1.0`; package installs commonly use `/var/lib/jellyfin/plugins`. Use the path for your installation.
 3. Ensure the Jellyfin service account can read the extracted files and write its own data/configuration directories. Start Jellyfin.
 4. Follow **Configure the shelves** below.
 
@@ -70,6 +74,8 @@ Use **Discovery preferences** in the user menu (Plugin Pages) to find titles and
 ## Troubleshooting
 
 **Registered but absent:** save HSS section settings, enable Modular Home for the user, and refresh the browser. Then inspect Preview for minimum-size or missing-evidence conditions.
+
+**Preview has cards but Home omits the shelf:** use Discovery Rows 1.0.1.0 or later and restart Jellyfin after updating. Version 1.0.0 could register after the initial HSS layout had already been cached. Separately, HSS 3.0.2.0 can retain an old row order after settings changes; restarting the server clears that cache. Browser refresh alone may reuse it. Orders 20–25 place the rows after existing rows with smaller order numbers.
 
 **First user selection reverts:** on a fresh HSS 3.0.2.0 install, its first per-user Modular Home save can create an empty settings file without saving the selection. Reopen Modular Home and save again. This was observed in the fixture and matches the [tagged HSS save implementation](https://github.com/IAmParadox27/jellyfin-plugin-home-sections/blob/d9798e410cacd4b8fbac4f57fcf3d5c05dd42dbd/src/Jellyfin.Plugin.HomeScreenSections/HomeScreen/HomeScreenManager.cs). Discovery Rows honors the effective selection once persisted and does not modify HSS's private settings files.
 

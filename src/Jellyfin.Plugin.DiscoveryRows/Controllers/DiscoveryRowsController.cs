@@ -26,7 +26,7 @@ public sealed class DiscoveryRowsController(LibrarySnapshotService index, Eviden
 {
     [HttpGet("Status")]
     [Authorize(Roles = "Administrator")]
-    public object Status() => new { pluginVersion = "1.0.0", jellyfinTarget = "10.11.11", hssTarget = "3.0.2.0", hssStatus = hss.Status,
+    public object Status() => new { pluginVersion = typeof(Plugin).Assembly.GetName().Version?.ToString(3), jellyfinTarget = "10.11.11", hssTarget = "3.0.2.0", hssStatus = hss.Status,
         registeredRows = hss.RegisteredCount, labelsReady = hss.LabelsReady, layoutAvailable = hss.LayoutAvailable, preferencesPageReady = hss.PreferencesPageReady,
         indexRevision = index.Snapshot.Revision, indexedTitles = index.Snapshot.Items.Count, indexedAt = index.Snapshot.At, indexDirty = index.Dirty,
         indexError = index.LastError, evidenceRecords = evidence.Snapshot.Count, evidenceError = evidence.LoadError,

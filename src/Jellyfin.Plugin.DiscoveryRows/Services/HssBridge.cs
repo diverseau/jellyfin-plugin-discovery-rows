@@ -47,7 +47,7 @@ public sealed class HssBridge
                 }
                 if (!LabelsReady) SeedLabels();
                 if (!PreferencesPageReady) RegisterPreferencesPage();
-                Status = LabelsReady ? "Registered; HSS settings must be saved to enable shelves" : "Registered; HSS settings labels need compatibility attention";
+                Status = LabelsReady ? "Registered with Home Screen Sections" : "Registered; HSS settings labels need compatibility attention";
                 return true;
             }
             catch (Exception ex) when (ex is TargetInvocationException or InvalidOperationException or ArgumentException or TypeLoadException)

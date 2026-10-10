@@ -1,7 +1,7 @@
 ---
 name: "Discovery Rows"
 guid: "b87d3d47-7a2d-43c6-89d2-592885b90d3e"
-version: "1.0.0.0"
+version: "1.0.1.0"
 targetAbi: "10.11.11.0"
 framework: "net9.0"
 overview: "Time, mood, awards and personal discovery shelves for Home Screen Sections."
@@ -14,5 +14,5 @@ artifacts:
   - "Jellyfin.Plugin.DiscoveryRows.dll"
   - "DiscoveryRows.Core.dll"
 changelog: >
-  First release: discovery rows, reviewed evidence, awards, episode completeness,
-  administrator previews, user exclusions and optional TMDB enrichment.
+  Register discovery shelves before the first homepage request so HSS cannot
+  cache a startup layout without them. Initialize the local index promptly after core startup.
