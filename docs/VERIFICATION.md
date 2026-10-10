@@ -10,6 +10,8 @@ Five additional automated tests cover preservation, unchanged source input, uniq
 
 The browser setup suite clicks the actual setup button, selects all 38, clears the selection, saves and reloads it, and changes one checkbox to restore an actual homepage shelf. Bulk actions require an explicit save and preserve card limits/minimums/unstarted filters. The new controls produce no browser runtime errors. See [browser-setup-verification.json](browser-setup-verification.json).
 
+The published 1.0.2 archive was fetched anonymously and checked against the manifest MD5 and release SHA-256. A normal Catalogue upgrade from 1.0.1.0 loaded 1.0.2.0, registered all 38 shelves and preserved shelf configuration, evidence and user selection. All 13 publication/upgrade checks pass. See [upgrade-verification-102.json](upgrade-verification-102.json).
+
 HSS 3.0.2.0 retains old page metadata after configuration changes, so the first setup requires one restart. Later plugin checkbox changes work through the cached all-shelf layout with a Home refresh. Insufficient evidence/candidates still hide shelves. The shared option applies to all users who enable Modular Home; it does not enable Modular Home itself.
 
 ## Version 1.0.1 startup regression
