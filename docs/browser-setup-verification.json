@@ -1,0 +1,13 @@
+{
+  "version": "1.0.2",
+  "setupButton": true,
+  "sharedSelection": true,
+  "selectAll": 38,
+  "clearSelection": 0,
+  "explicitSave": true,
+  "otherShelfOptionsPreserved": true,
+  "savedSelectionReloads": true,
+  "disabledShelfHidden": true,
+  "enabledShelfReturns": true,
+  "browserErrors": []
+}

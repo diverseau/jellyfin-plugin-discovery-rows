@@ -1,10 +1,10 @@
-# Install Discovery Rows 1.0.1
+# Install Discovery Rows 1.0.2
 
 Supported and tested stack: **Jellyfin server/Web 10.11.11, Home Screen Sections 3.0.2.0**. The development fixture also used **File Transformation 3.0.1.0 and Plugin Pages 3.0.1.0**. Native clients and Jellyfin 12.x are not certified by this release.
 
-## Update from 1.0.0
+## Update from 1.0.0 or 1.0.1
 
-In Dashboard → Plugins → Catalogue, choose Discovery Rows and install **1.0.1.0**, then restart Jellyfin and refresh Home. Existing shelf settings, HSS selection and plugin data are retained. Version 1.0.1 registers the shelves before the first homepage request, fixing a startup timing issue that let HSS cache a layout without them. The repository URL stays the same.
+In Dashboard → Plugins → Catalogue, choose Discovery Rows and install **1.0.2.0**, then restart Jellyfin. Existing shelf configuration, HSS settings and plugin data are retained on upgrade. The repository URL stays the same. Open the plugin's Setup tab and use the one-time HSS setup below to enable the new shared-selection workflow; upgrading alone does not change HSS selections.
 
 ## Install from the catalogue
 
@@ -15,25 +15,30 @@ In Dashboard → Plugins → Catalogue, choose Discovery Rows and install **1.0.
    https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json
    ```
 
-3. Click **Add**, open **Catalogue**, choose **Discovery Rows**, and install **1.0.1.0**. Restart Jellyfin.
+3. Click **Add**, open **Catalogue**, choose **Discovery Rows**, and install **1.0.2.0**. Restart Jellyfin.
 4. Follow **Configure the shelves** below.
 
-The repository provides Discovery Rows only. HSS and its dependencies must be installed separately. Jellyfin validates the downloaded ZIP against the manifest's MD5; SHA-256 hashes are also included with the [release](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.1).
+The repository provides Discovery Rows only. HSS and its dependencies must be installed separately. Jellyfin validates the downloaded ZIP against the manifest's MD5; SHA-256 hashes are also included with the [release](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.2).
 
 ## Manual package installation
 
 1. Install HSS and its dependencies using [the publisher's repository](https://www.iamparadox.dev/jellyfin/plugins/manifest.json), selecting builds for Jellyfin 10.11.11. Restart Jellyfin if those were newly installed.
-2. Stop Jellyfin. Create `DiscoveryRows_1.0.1.0` inside **your server's actual plugins directory**, then extract `DiscoveryRows-1.0.1.0-jellyfin-10.11.11.zip` into it. On the official Docker image, that is `/config/plugins/DiscoveryRows_1.0.1.0`; package installs commonly use `/var/lib/jellyfin/plugins`. Use the path for your installation.
+2. Stop Jellyfin. Create `DiscoveryRows_1.0.2.0` inside **your server's actual plugins directory**, then extract `DiscoveryRows-1.0.2.0-jellyfin-10.11.11.zip` into it. On the official Docker image, that is `/config/plugins/DiscoveryRows_1.0.2.0`; package installs commonly use `/var/lib/jellyfin/plugins`. Use the path for your installation.
 3. Ensure the Jellyfin service account can read the extracted files and write its own data/configuration directories. Start Jellyfin.
 4. Follow **Configure the shelves** below.
 
 The archive contains only our plugin/core assemblies, dependency metadata, installation guide and notices. It does not install or change your running server automatically.
 
-## Configure the shelves
+## Configure the shelves in one place
 
-1. In Dashboard → Plugins, open **Discovery Rows**. Check that 38 shelves have registered and the local index is populated. Initial indexing runs in background, generally within 15 seconds after startup, plus library processing time.
-2. Open **Home Screen Sections** configuration. Choose a small selection of Discovery Rows shelves and set their order/view mode. **Save HSS settings**. Registration alone does not persist HSS's layout entries.
-3. Open **Modular Home** in the user's menu, enable it and select shelves. Refresh the homepage.
+1. In Dashboard → Plugins, open **Discovery Rows → Setup**. Check that 38 shelves have registered and the local index is populated. Initial indexing runs in background, generally within 15 seconds after startup, plus library processing time.
+2. Leave **Let users choose Discovery shelves separately in Modular Home** unchecked, then click **Enable all shelves in HSS**. This saves all 38 HSS entries as enabled and locked to the shared administrator selection. It preserves other HSS sections, global settings, existing Discovery order/card styles and saved personal selections. New or placeholder-order shelves receive distinct positions after configured rows.
+3. **Restart Jellyfin once** to clear HSS 3.0.2.0's cached layout. Enable Modular Home in each user's menu if it is not already enabled; no individual Discovery shelf selection is needed in shared mode.
+4. In **Discovery Rows → Shelves**, check only the shelves you want and click **Save shelf settings**. **Select all** and **Clear selection** change the enabled checkboxes without changing sizes or filters; save to apply them. Refresh Home.
+
+After this setup, leave all 38 Discovery entries enabled in HSS. Choose what appears only in Discovery Rows. Disabled shelves return no cards and remain hidden, even though HSS lists them as enabled. Later shelf toggles need a save and browser refresh, with no HSS edit, personal settings save or restart. HSS still controls row ordering and card styles.
+
+For individual selections, check the personal-selection option before clicking the setup button. Existing personal selections are retained; each user can choose shelves in Modular Home, subject to the enabled checkboxes in Discovery Rows. Switching between shared and personal modes needs another HSS setup and restart. You may also configure everything manually through HSS as in earlier releases.
 
 ## Useful offline start
 
@@ -41,7 +46,7 @@ Use Movies Under 90 Minutes, 90-Minute Comedies/Thrillers, Short Episodes, 30-Mi
 
 By default each row needs **six credible candidates** and displays up to **16 cards**. An administrator may explicitly lower the minimum for small curated shelves. Time rows reject null runtime and any selectable edition exceeding the limit. Series rows require a real accessible regular starting episode; the plugin does not substitute a later file for a missing pilot.
 
-The first 15 presets are enabled in Discovery Rows configuration. Awards, complete-story and theme presets are registered but disabled until enabled by the administrator. HSS selection and Discovery Rows eligibility settings are separate. A registered row can legitimately remain empty.
+The first 15 presets are enabled in Discovery Rows configuration. Awards, complete-story and theme presets are registered but disabled until enabled by the administrator. In shared mode, HSS keeps every Discovery entry enabled and the plugin checkboxes control visibility. In personal mode, HSS user selection is an additional filter. A registered row can legitimately remain empty.
 
 ## Add reviewed evidence
 
@@ -73,9 +78,9 @@ Use **Discovery preferences** in the user menu (Plugin Pages) to find titles and
 
 ## Troubleshooting
 
-**Registered but absent:** save HSS section settings, enable Modular Home for the user, and refresh the browser. Then inspect Preview for minimum-size or missing-evidence conditions.
+**Registered but absent:** use Setup → Enable all shelves in HSS, restart once, and confirm Modular Home is enabled for the user. Check the desired shelf is enabled in Discovery Rows, then inspect Preview for minimum-size or missing-evidence conditions.
 
-**Preview has cards but Home omits the shelf:** use Discovery Rows 1.0.1.0 or later and restart Jellyfin after updating. Version 1.0.0 could register after the initial HSS layout had already been cached. Separately, HSS 3.0.2.0 can retain an old row order after settings changes; restarting the server clears that cache. Browser refresh alone may reuse it. Orders 20–25 place the rows after existing rows with smaller order numbers.
+**Preview has cards but Home omits the shelf:** use Discovery Rows 1.0.2.0 or later and restart Jellyfin after updating. Version 1.0.1 fixed the startup registration issue: 1.0.0 could register after the initial HSS layout had already been cached. Separately, HSS 3.0.2.0 can retain an old row order after settings changes; restarting the server clears that cache. Browser refresh alone may reuse it. Orders 20–25 place the rows after existing rows with smaller order numbers.
 
 **First user selection reverts:** on a fresh HSS 3.0.2.0 install, its first per-user Modular Home save can create an empty settings file without saving the selection. Reopen Modular Home and save again. This was observed in the fixture and matches the [tagged HSS save implementation](https://github.com/IAmParadox27/jellyfin-plugin-home-sections/blob/d9798e410cacd4b8fbac4f57fcf3d5c05dd42dbd/src/Jellyfin.Plugin.HomeScreenSections/HomeScreen/HomeScreenManager.cs). Discovery Rows honors the effective selection once persisted and does not modify HSS's private settings files.
 

@@ -1,6 +1,16 @@
-# Discovery Rows 1.0.1 verification
+# Discovery Rows 1.0.2 verification
 
 Built on **11 October 2026, Australia/Perth**, in `/home/diverse/Projects/jellyfin-plugin-discovery-rows`. This report distinguishes runtime checks from design assumptions.
+
+## Version 1.0.2 one-place selection
+
+The new administrator-only Setup action clones HSS's public typed configuration and saves it through HSS's public `UpdateConfiguration` method. It enables all 38 exact owned IDs, sets one instance each, and optionally disables per-user overrides so existing users receive the shared selection. No HSS private user file is edited. Global settings and other plugin sections are retained. Existing Discovery positions/styles remain; missing or placeholder-order entries receive unique positions. The action is explicit and repeatable; it does not continuously overwrite later HSS edits.
+
+Five additional automated tests cover preservation, unchanged source input, unique new orders, idempotence, optional personal selection, exact ownership/duplicate handling and safe integer overflow. The live setup suite passed 17 assertions and verifies ordinary-user denial, all four fixture users receiving the 38 rows without a personal save, private settings file hashes staying identical, configuration/position/style preservation, personal-mode switching and minimal status output. After one restart, all 38 are present in HSS metadata; disabling and re-enabling a shelf solely in Discovery Rows changes the actual HSS callback on the same cached layout. See [homepage-setup-verification.json](homepage-setup-verification.json).
+
+The browser setup suite clicks the actual setup button, selects all 38, clears the selection, saves and reloads it, and changes one checkbox to restore an actual homepage shelf. Bulk actions require an explicit save and preserve card limits/minimums/unstarted filters. The new controls produce no browser runtime errors. See [browser-setup-verification.json](browser-setup-verification.json).
+
+HSS 3.0.2.0 retains old page metadata after configuration changes, so the first setup requires one restart. Later plugin checkbox changes work through the cached all-shelf layout with a Home refresh. Insufficient evidence/candidates still hide shelves. The shared option applies to all users who enable Modular Home; it does not enable Modular Home itself.
 
 ## Version 1.0.1 startup regression
 
@@ -38,7 +48,7 @@ The container and artifact locks are in [build-lock.json](build-lock.json). HSS/
 
 ## Automated tests
 
-**103 passing tests, zero failures/skips** at the recorded run. Release builds use warnings-as-errors and produced zero warnings/errors.
+**108 passing tests, zero failures/skips** at the recorded 1.0.2 run. Release builds use warnings-as-errors and produced zero warnings/errors.
 
 Behavioral cases include strict/inclusive minute boundaries down to a single tick; null/zero runtime; 88/105-minute editions; missing/inaccessible/long pilots; special episodes; reviewed versus unknown/negative facets; tiny/missing vote samples; rating scales and staleness; discovery exposure; exact work-linked award body/outcome/ceremony filters; missing finales; inaccessible required episodes; double-episode files; stale/unknown/unaired manifests; conflicting episode IDs; and real season-card requirements.
 

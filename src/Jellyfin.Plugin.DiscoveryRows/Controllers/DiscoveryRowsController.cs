@@ -17,6 +17,7 @@ public sealed record TokenRequest(string? Token);
 public sealed record FeedbackRequest(Guid ItemId, bool Hidden);
 public sealed record ExclusionRequest(string WorkKey, bool Excluded);
 public sealed record RestoreRequest(string WorkKey);
+public sealed record HomepageSetupRequest(bool AllowUserSelection);
 
 [ApiController]
 [Route("DiscoveryRows")]
@@ -48,6 +49,20 @@ public sealed class DiscoveryRowsController(LibrarySnapshotService index, Eviden
     [HttpGet("Users")]
     [Authorize(Roles = "Administrator")]
     public object Users() => users.GetUsers().Select(u => new { id = u.Id, name = u.Username }).ToArray();
+
+    [HttpGet("HomepageSetup")]
+    [Authorize(Roles = "Administrator")]
+    public HomepageSetupStatus HomepageSetup() => hss.HomepageSetup();
+
+    [HttpPost("HomepageSetup")]
+    [Authorize(Roles = "Administrator")]
+    public IActionResult HomepageSetup([FromBody] HomepageSetupRequest request)
+    {
+        var result = hss.HomepageSetup(request.AllowUserSelection);
+        if (!result.Available) return BadRequest(new { error = "Could not save Home Screen Sections settings. Check HSS is installed and inspect Jellyfin logs." });
+        recommendations.Invalidate();
+        return Ok(result);
+    }
 
     [HttpPut("Configuration")]
     [Authorize(Roles = "Administrator")]

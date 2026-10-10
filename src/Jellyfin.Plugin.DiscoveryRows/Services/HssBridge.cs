@@ -2,7 +2,9 @@ using System.Collections;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using DiscoveryRows.Core;
+using MediaBrowser.Model.Plugins;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.DiscoveryRows.Services;
@@ -56,6 +58,37 @@ public sealed class HssBridge
     }
 
     public static object ParseJObject(Type expectedType, string json) => expectedType.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static, [typeof(string)])?.Invoke(null, [json]) ?? throw new InvalidOperationException("Expected HSS JObject.Parse(string) capability.");
+
+    public HomepageSetupStatus HomepageSetup(bool? allowUserSelection = null)
+    {
+        lock (_gate)
+        {
+            try
+            {
+                if (!Register()) return new(false, 0, 0, RowCatalogue.All.Count);
+                var plugin = _assembly!.GetType("Jellyfin.Plugin.HomeScreenSections.HomeScreenSectionsPlugin")?
+                    .GetProperty("Instance", BindingFlags.Public | BindingFlags.Static)?.GetValue(null)
+                    ?? throw new InvalidOperationException("HSS plugin is unavailable.");
+                var current = plugin.GetType().GetProperty("Configuration")?.GetValue(plugin)
+                    ?? throw new InvalidOperationException("HSS configuration is unavailable.");
+                var json = JsonSerializer.SerializeToNode(current, current.GetType()) as JsonObject
+                    ?? throw new InvalidOperationException("Unsupported HSS configuration.");
+                if (allowUserSelection is null) return HssLayoutEditor.Inspect(json);
+                var prepared = HssLayoutEditor.Prepare(json, allowUserSelection.Value);
+                var typed = JsonSerializer.Deserialize(prepared, current.GetType())
+                    ?? throw new InvalidOperationException("Unsupported HSS configuration.");
+                var update = plugin.GetType().GetMethod("UpdateConfiguration", [typeof(BasePluginConfiguration)])
+                    ?? throw new InvalidOperationException("HSS configuration saving is unavailable.");
+                update.Invoke(plugin, [typed]);
+                return HssLayoutEditor.Inspect(prepared);
+            }
+            catch (Exception ex) when (ex is TargetInvocationException or InvalidOperationException or ArgumentException or JsonException or NotSupportedException or OverflowException)
+            {
+                _logger.LogWarning("Discovery Rows homepage setup unavailable ({ExceptionType})", ex.GetType().Name);
+                return new(false, 0, 0, RowCatalogue.All.Count);
+            }
+        }
+    }
 
     private void SeedLabels()
     {

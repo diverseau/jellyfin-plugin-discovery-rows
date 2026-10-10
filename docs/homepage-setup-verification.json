@@ -1,0 +1,23 @@
+{
+  "version": "1.0.2",
+  "passed": 17,
+  "checks": [
+    "ordinary users cannot inspect or change shared homepage setup",
+    "one click enables and locks all 38 HSS Discovery shelves",
+    "other HSS sections and global configuration remain unchanged",
+    "setup leaves Discovery shelf configuration unchanged",
+    "existing Discovery positions and styles are preserved",
+    "admin receives all Discovery shelves without a personal settings save",
+    "a receives all Discovery shelves without a personal settings save",
+    "b receives all Discovery shelves without a personal settings save",
+    "child receives all Discovery shelves without a personal settings save",
+    "setup never rewrites HSS private user settings files",
+    "repeating setup is idempotent",
+    "personal selection remains an explicit option",
+    "after one restart HSS layout includes all 38 Discovery shelves",
+    "only the enabled plugin shelf returns cards",
+    "plugin checkbox disables shelf on the same cached HSS layout",
+    "plugin checkbox restores shelf without another HSS or personal save",
+    "setup status exposes readiness counts only"
+  ]
+}

@@ -2,7 +2,7 @@
 
 An installable server plugin that adds **38 discovery shelves** to **Home Screen Sections 3.0.2.0** on **Jellyfin 10.11.11**. Shelves offer different reasons to watch your local media: time available, mood, quality, recognition, complete stories and themes.
 
-Version **1.0.1**, built and verified on **11 October 2026, Australia/Perth**. The authoritative project folder is `/home/diverse/Projects/jellyfin-plugin-discovery-rows`.
+Version **1.0.2**, built and verified on **11 October 2026, Australia/Perth**. The authoritative project folder is `/home/diverse/Projects/jellyfin-plugin-discovery-rows`.
 
 ## Install and use
 
@@ -11,9 +11,9 @@ Add this repository in **Dashboard → Plugins → Repositories → New Reposito
 - **Name:** Discovery Rows
 - **URL:** `https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json`
 
-Then install **Discovery Rows** from the Catalogue and restart Jellyfin. Install HSS, File Transformation and Plugin Pages separately. Follow [INSTALL.md](docs/INSTALL.md) for dependencies and shelf setup. The [release download](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.1) also supports manual installation. This release has been verified on disposable servers; it has not been deployed to a production server.
+Then install **Discovery Rows** from the Catalogue and restart Jellyfin. Install HSS, File Transformation and Plugin Pages separately. Follow [INSTALL.md](docs/INSTALL.md) for dependencies and shelf setup. The [release download](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.2) also supports manual installation. This release has been verified on disposable servers; it has not been deployed to a production server.
 
-The first 15 shelves are available by default; seven award/completeness shelves and sixteen themes are optional. HSS owns homepage selection/order. Discovery Rows owns eligibility, scores, explanations and coordination among its own selected shelves.
+The first 15 shelves are available by default; seven award/completeness shelves and sixteen themes are optional. Use **Setup → Enable all shelves in HSS** once, leaving personal selection unchecked, then choose what appears only in **Discovery Rows → Shelves**. Select all / Clear selection are available. Restart once after the HSS setup; later shelf changes need only a save and Home refresh. HSS controls ordering, while Discovery Rows controls eligibility, scores, explanations and coordination. Individual selections in Modular Home remain optional.
 
 - Runtime/genre shelves work offline without credentials.
 - Mood shelves require reviewed manual/imported facets, rather than silently assuming a genre implies a mood.

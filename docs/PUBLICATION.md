@@ -8,14 +8,14 @@ https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/
 
 The root manifest describes the exact release ZIP hosted in GitHub Releases. Jellyfin 10.11.11 expects an array of packages, four-part assembly/ABI versions, a HTTPS ZIP source URL and an MD5 checksum of the complete ZIP. SHA-256 release hashes provide an additional independent check.
 
-For release 1.0.1, build and generate the manifest:
+For release 1.0.2, build and generate the manifest:
 
 ```bash
 ./scripts/build.sh
 python scripts/generate-manifest.py \
-  --archive artifacts/DiscoveryRows-1.0.1.0-jellyfin-10.11.11.zip \
-  --source-url https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/download/v1.0.1/DiscoveryRows-1.0.1.0-jellyfin-10.11.11.zip \
-  --changelog "Register shelves before the first homepage request; fix startup layout caching." \
+  --archive artifacts/DiscoveryRows-1.0.2.0-jellyfin-10.11.11.zip \
+  --source-url https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/download/v1.0.2/DiscoveryRows-1.0.2.0-jellyfin-10.11.11.zip \
+  --changelog "One-click HSS setup, shared shelf selection and bulk select/clear controls." \
   --output work/next-manifest.json
 ```
 
