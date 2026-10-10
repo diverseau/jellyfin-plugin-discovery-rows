@@ -10,6 +10,8 @@ Version 1.0.1 registers synchronously when the hosted service starts, before HTT
 
 The fixture regression test polls immediately from a stopped server. Its first available HTTP request now reports 38 registered shelves; the first HSS layout includes the selected discovery shelf, the same cached layout retains it after indexing, and the actual HSS callback returns eight eligible cards. See [startup-verification.json](startup-verification.json). This test would fail on 1.0.0. The 103 automated tests, 25 live API assertions and real browser/native playback checks also pass on 1.0.1.
 
+The published 1.0.1 archive was fetched anonymously and verified against MD5/SHA-256. A normal catalogue upgrade from 1.0.0.0 then loaded 1.0.1.0 after restart, registered 38 shelves and preserved the full shelf configuration, evidence export and user selection. Status reports 1.0.1. See [upgrade-verification-101.json](upgrade-verification-101.json) for the 13 checks.
+
 ## Shipped scope
 
 - All 15 initial discovery definitions, three award rows, four series-unit rows and 16 optional theme presets: **38 shelves**.
