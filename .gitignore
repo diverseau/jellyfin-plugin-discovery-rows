@@ -1,0 +1,10 @@
+work/
+bin/
+obj/
+TestResults/
+artifacts/
+.env
+.env.*
+!.env.example
+*.user
+*.suo

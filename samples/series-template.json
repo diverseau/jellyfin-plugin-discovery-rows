@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "workKey": "series:jellyfin:00000000000000000000000000000000",
+      "facets": [
+        {"name": "complete_limited_story", "positive": true, "confidence": 0.9, "reviewed": false, "source": "replace_with_review_source", "reviewedAt": "2026-10-11T00:00:00+08:00"}
+      ],
+      "manifest": {
+        "workKey": "series:jellyfin:00000000000000000000000000000000",
+        "order": "aired", "finished": false, "complete": false,
+        "source": "replace_with_manifest_source", "fetchedAt": "2026-10-11T00:00:00+08:00",
+        "episodes": [{"season": 1, "number": 1, "required": true, "airDate": "2024-01-01T00:00:00Z"}]
+      }
+    }
+  ]
+}

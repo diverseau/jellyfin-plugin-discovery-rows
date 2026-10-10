@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscoveryRows.Core", "src\DiscoveryRows.Core\DiscoveryRows.Core.csproj", "{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.Plugin.DiscoveryRows", "src\Jellyfin.Plugin.DiscoveryRows\Jellyfin.Plugin.DiscoveryRows.csproj", "{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscoveryRows.Tests", "tests\DiscoveryRows.Tests\DiscoveryRows.Tests.csproj", "{52AF1930-EEAC-40BC-A1D6-186A80762277}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Debug|x64.Build.0 = Debug|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Debug|x86.Build.0 = Debug|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Release|x64.ActiveCfg = Release|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Release|x64.Build.0 = Release|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Release|x86.ActiveCfg = Release|Any CPU
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062}.Release|x86.Build.0 = Release|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Debug|x64.Build.0 = Debug|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Debug|x86.Build.0 = Debug|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Release|x64.ActiveCfg = Release|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Release|x64.Build.0 = Release|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Release|x86.ActiveCfg = Release|Any CPU
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA}.Release|x86.Build.0 = Release|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Debug|x64.Build.0 = Debug|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Debug|x86.Build.0 = Debug|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Release|x64.ActiveCfg = Release|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Release|x64.Build.0 = Release|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Release|x86.ActiveCfg = Release|Any CPU
+		{52AF1930-EEAC-40BC-A1D6-186A80762277}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CADBA59E-3D36-4B0B-A230-CEAAFE5CC062} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{196FEFF7-9B0A-44E8-BA09-B575D45FBBDA} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{52AF1930-EEAC-40BC-A1D6-186A80762277} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+	EndGlobalSection
+EndGlobal

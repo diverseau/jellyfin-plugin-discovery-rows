@@ -1,0 +1,18 @@
+---
+name: "Discovery Rows"
+guid: "b87d3d47-7a2d-43c6-89d2-592885b90d3e"
+version: "1.0.0.0"
+targetAbi: "10.11.11.0"
+framework: "net9.0"
+overview: "Time, mood, awards and personal discovery shelves for Home Screen Sections."
+description: >
+  Adds 38 evidence-backed, user-specific local-library shelves through HSS 3.0.2.0.
+  Optional TMDB enrichment runs in background tasks. Offline runtime shelves work without credentials.
+category: "General"
+owner: "Discovery Rows contributors"
+artifacts:
+  - "Jellyfin.Plugin.DiscoveryRows.dll"
+  - "DiscoveryRows.Core.dll"
+changelog: >
+  First release: discovery rows, reviewed evidence, awards, episode completeness,
+  administrator previews, user exclusions and optional TMDB enrichment.

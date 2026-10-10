@@ -1,0 +1,40 @@
+{
+  "sdk": {
+    "version": "9.0.318",
+    "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.318/dotnet-sdk-9.0.318-linux-x64.tar.gz",
+    "sha512": "e8685293a3512178e0de1bb3c1663e31fdf9d761af705094bf833cc1ff6b9a18c543aa4141f0216503c98039c719585a6d32905b0bbb3279e93b7e7616e047c3"
+  },
+  "jellyfinImage": "jellyfin/jellyfin@sha256:aefb67e6a7ff1debdd154a78a7bbb780fd0c873d8639210a7f6a2016ad2b35db",
+  "companions": [
+    {
+      "name": "File Transformation",
+      "version": "3.0.1.0",
+      "targetAbi": "10.11.11.0",
+      "sourceUrl": "https://github.com/IAmParadox27/jellyfin-plugin-file-transformation/releases/download/3.0.1.0/Release-10.11.11.zip",
+      "publisherChecksum": "18132C4EA39587F41E9EAE181298CC1C",
+      "sha256": "1da3c0180654963d02778836e06826c2bdfcf77a2f4db23a7f74596f334dde3a"
+    },
+    {
+      "name": "Plugin Pages",
+      "version": "3.0.1.0",
+      "targetAbi": "10.11.11.0",
+      "sourceUrl": "https://github.com/IAmParadox27/jellyfin-plugin-pages/releases/download/3.0.1.0/Release-10.11.11.zip",
+      "publisherChecksum": "2412EA97ABBD19BDCDBE0D93BC0E3F34",
+      "sha256": "3715e7fa12ddcd165621801e7a64a7d1a427aa117892cbcdb356f817cfb32979"
+    },
+    {
+      "name": "Home Screen Sections",
+      "version": "3.0.2.0",
+      "targetAbi": "10.11.11.0",
+      "sourceUrl": "https://github.com/IAmParadox27/jellyfin-plugin-home-sections/releases/download/3.0.2.0/Release-10.11.11.zip",
+      "publisherChecksum": "9C0414F8813D0CDFBD29F3F4CA218069",
+      "sha256": "aa4411c6f46c9a7878ea3a2cbfad0f926bd9fa2103aa1c22b1457797a32e5052"
+    }
+  ],
+  "pluginPagesSource": {
+    "tag": "3.0.1.0",
+    "commit": "8b3ca7f6fff4c038b163ede8a0b05ad8cab15622"
+  },
+  "browserRunner": "playwright-core@1.64.0",
+  "chromiumVersion": "Chromium 152.0.7977.82 Arch Linux"
+}
