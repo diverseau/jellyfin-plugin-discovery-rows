@@ -8,6 +8,14 @@
     "category": "General",
     "versions": [
       {
+        "version": "1.0.1.0",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/download/v1.0.1/DiscoveryRows-1.0.1.0-jellyfin-10.11.11.zip",
+        "checksum": "48a0d2ea58a423b0b78395c8ab0ef687",
+        "timestamp": "2026-10-10T21:11:05.064464+00:00",
+        "changelog": "Fix missing homepage shelves: register before the first HTTP request so HSS cannot cache an incomplete startup layout. Preserve existing shelf settings, selections and evidence."
+      },
+      {
         "version": "1.0.0.0",
         "targetAbi": "10.11.11.0",
         "sourceUrl": "https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/download/v1.0.0/DiscoveryRows-1.0.0.0-jellyfin-10.11.11.zip",
