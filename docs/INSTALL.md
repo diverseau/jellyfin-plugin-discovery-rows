@@ -2,16 +2,34 @@
 
 Supported and tested stack: **Jellyfin server/Web 10.11.11, Home Screen Sections 3.0.2.0**. The development fixture also used **File Transformation 3.0.1.0 and Plugin Pages 3.0.1.0**. Native clients and Jellyfin 12.x are not certified by this release.
 
-## Install the package
+## Install from the catalogue
+
+1. Install HSS and its dependencies using [the publisher's repository](https://www.iamparadox.dev/jellyfin/plugins/manifest.json), selecting builds for Jellyfin 10.11.11. Restart Jellyfin if those were newly installed.
+2. Open **Dashboard → Plugins → Repositories → New Repository**. Enter **Discovery Rows** as the name and paste this URL:
+
+   ```text
+   https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json
+   ```
+
+3. Click **Add**, open **Catalogue**, choose **Discovery Rows**, and install **1.0.0.0**. Restart Jellyfin.
+4. Follow **Configure the shelves** below.
+
+The repository provides Discovery Rows only. HSS and its dependencies must be installed separately. Jellyfin validates the downloaded ZIP against the manifest's MD5; SHA-256 hashes are also included with the [release](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.0).
+
+## Manual package installation
 
 1. Install HSS and its dependencies using [the publisher's repository](https://www.iamparadox.dev/jellyfin/plugins/manifest.json), selecting builds for Jellyfin 10.11.11. Restart Jellyfin if those were newly installed.
 2. Stop Jellyfin. Create `DiscoveryRows_1.0.0.0` inside **your server's actual plugins directory**, then extract `DiscoveryRows-1.0.0.0-jellyfin-10.11.11.zip` into it. On the official Docker image, that is `/config/plugins/DiscoveryRows_1.0.0.0`; package installs commonly use `/var/lib/jellyfin/plugins`. Use the path for your installation.
 3. Ensure the Jellyfin service account can read the extracted files and write its own data/configuration directories. Start Jellyfin.
-4. In Dashboard → Plugins, open **Discovery Rows**. Check that 38 shelves have registered and the local index is populated. Initial indexing runs in background, generally within 15 seconds after startup, plus library processing time.
-5. Open **Home Screen Sections** configuration. Choose a small selection of Discovery Rows shelves and set their order/view mode. **Save HSS settings**. Registration alone does not persist HSS's layout entries.
-6. Open **Modular Home** in the user's menu, enable it and select shelves. Refresh the homepage.
+4. Follow **Configure the shelves** below.
 
 The archive contains only our plugin/core assemblies, dependency metadata, installation guide and notices. It does not install or change your running server automatically.
+
+## Configure the shelves
+
+1. In Dashboard → Plugins, open **Discovery Rows**. Check that 38 shelves have registered and the local index is populated. Initial indexing runs in background, generally within 15 seconds after startup, plus library processing time.
+2. Open **Home Screen Sections** configuration. Choose a small selection of Discovery Rows shelves and set their order/view mode. **Save HSS settings**. Registration alone does not persist HSS's layout entries.
+3. Open **Modular Home** in the user's menu, enable it and select shelves. Refresh the homepage.
 
 ## Useful offline start
 

@@ -21,7 +21,8 @@ metadata = {"name": "Discovery Rows", "guid": "b87d3d47-7a2d-43c6-89d2-592885b90
             "targetAbi": "10.11.11.0", "framework": "net9.0", "hssVersion": "3.0.2.0", "archive": release.name,
             "sha256": hashlib.sha256(release.read_bytes()).hexdigest(),
             "files": {f: hashlib.sha256((source / f).read_bytes()).hexdigest() for f in files},
-            "publication": "Local build; no public download URL or repository manifest has been published."}
+            "repositoryUrl": "https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json",
+            "sourceUrl": "https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/download/v1.0.0/" + release.name}
 (destination / "release.json").write_text(json.dumps(metadata, indent=2) + "\n")
 (destination / "SHA256SUMS").write_text(f'{metadata["sha256"]}  {release.name}\n')
 print(f"Packaged {release}")

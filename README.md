@@ -6,7 +6,12 @@ Version **1.0.0**, built and verified on **11 October 2026, Australia/Perth**. T
 
 ## Install and use
 
-Follow [INSTALL.md](docs/INSTALL.md). The built package is `artifacts/DiscoveryRows-1.0.0.0-jellyfin-10.11.11.zip`, with hashes and metadata alongside it. Install HSS, File Transformation and Plugin Pages separately. This build has not been deployed to a production server or published remotely.
+Add this repository in **Dashboard → Plugins → Repositories → New Repository**:
+
+- **Name:** Discovery Rows
+- **URL:** `https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json`
+
+Then install **Discovery Rows** from the Catalogue and restart Jellyfin. Install HSS, File Transformation and Plugin Pages separately. Follow [INSTALL.md](docs/INSTALL.md) for dependencies and shelf setup. The [release download](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.0) also supports manual installation. This release has been verified on disposable servers; it has not been deployed to a production server.
 
 The first 15 shelves are available by default; seven award/completeness shelves and sixteen themes are optional. HSS owns homepage selection/order. Discovery Rows owns eligibility, scores, explanations and coordination among its own selected shelves.
 
@@ -40,10 +45,12 @@ See [VERIFICATION.md](docs/VERIFICATION.md) for evidence, actual fixture sizes/t
 | `src/Jellyfin.Plugin.DiscoveryRows/` | Jellyfin/HSS adapters, DI, authenticated endpoints, dashboard/preferences, background tasks and durable JSON stores. |
 | `tests/DiscoveryRows.Tests/` | Behavioral, identity, persistence and simulated-provider tests. |
 | `samples/` | Non-factual evidence templates with inactive placeholder records. |
-| `scripts/` | SDK bootstrap, locked build and local package creation. |
+| `scripts/` | SDK bootstrap, locked build, package creation and repository manifest generation. |
 | `docs/` | Installation, verification, research, original design and release scope. |
 | `work/` | Ignored SDK, pinned research checkouts and disposable development fixture. |
 
 The [original implementation plan](docs/IMPLEMENTATION_PLAN.md), [row catalogue](docs/ROW_CATALOGUE.md), [research](docs/RESEARCH.md) and [backlog](docs/BACKLOG.md) explain the design and future extensions. [Source lock](docs/research/source-lock.json) records research revisions. [Notices](NOTICE.md) cover dependencies and attribution; code uses GPL-3.0.
 
 Automatic full-page row composition, local-model label suggestions, translated shelf wording, native-client integrations and Jellyfin 12 support remain future work. They are not needed to use this release's stable Web shelves.
+
+Release maintainers: see [PUBLICATION.md](docs/PUBLICATION.md) for updating the repository manifest and download together.
