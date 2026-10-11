@@ -14,6 +14,7 @@ public sealed class PluginConfiguration : BasePluginConfiguration
     public bool Enabled { get; set; } = true;
     public bool CoordinateRows { get; set; } = true;
     public bool EnableTmdb { get; set; }
+    public bool UseAutomaticMetadata { get; set; } = true;
     public int CacheMinutes { get; set; } = 10;
     public int MaximumCachedUsers { get; set; } = 64;
     public int EnrichmentBatchSize { get; set; } = 100;

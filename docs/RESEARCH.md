@@ -76,3 +76,7 @@ The official plugin template demonstrates `BasePlugin<PluginConfiguration>`, emb
 ## What remains experimental
 
 The first build must establish reflected JObject construction across load contexts, handler DI resolution, authenticated HttpContext availability, persistent HSS settings, CSS-safe IDs, empty-row rendering, and native DTO navigation/playback. Static inspection supports the approach but cannot certify those runtime behaviors. Larger scale latency, metadata coverage, and recommendation quality also require fixtures and the owner's real library after the prototype works.
+
+## 1.0.3 usability revision
+
+The user rejected per-title labelling as impractical. The original manual-first recommendation is superseded for normal mood/theme discovery: use explainable local genre/tag/year rules plus cached TMDB keywords, make reviewed labels optional overrides, and provide a one-click candidate-based shelf selection. This does not turn metadata into factual awards or a claim about a pilot's quality. An ended provider-identified miniseries may qualify for a one-night/weekend file/time check after full episode reconciliation, with no narrative-ending guarantee. A model-based classifier was not selected because it would add a service/model requirement and uncertain output when useful local catalogue signals are already available. See [automatic matching](AUTOMATIC_MATCHING.md) for the implemented choice.

@@ -1,0 +1,11 @@
+{
+  "version": "1.0.3",
+  "automaticDefault": true,
+  "selectMatchingShelves": true,
+  "emptyAwardShelfNotSelected": true,
+  "previewExplainsMatch": true,
+  "familyHomepageRenders": true,
+  "includeExcludeResetWithoutJson": true,
+  "providerCalls": 0,
+  "browserErrors": []
+}

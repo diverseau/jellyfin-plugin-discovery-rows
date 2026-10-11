@@ -47,6 +47,18 @@ public sealed class PersistenceTests : IDisposable
         var corrupt = NewStore(); Assert.NotNull(corrupt.LoadError); Assert.Equal("corrupt-file", File.ReadAllText(file));
         corrupt.Import(new() { Items = [Work()] }); Assert.Null(corrupt.LoadError); Assert.Single(Directory.GetFiles(store.DataFolder, "evidence.json.recovery-*")); Assert.Single(NewStore().Snapshot);
     }
+    [Fact] public void FacetCorrectionsSurviveReloadAndDoNotLoseConcurrentProviderUpdates()
+    {
+        var store = NewStore();
+        Parallel.Invoke(() => store.SetFacetOverride("movie:tmdb:1", "family_intent", false),
+            () => store.UpdateProvider(new() { WorkKey = "movie:tmdb:1", Metadata = new() { Genres = ["Family"] },
+                Rating = new() { Value = 8, Votes = 10000, FetchedAt = DateTimeOffset.UtcNow } }));
+        var work = NewStore().Snapshot["movie:tmdb:1"];
+        Assert.False(work.Facets.Single().Positive); Assert.NotNull(work.Rating); Assert.NotNull(work.Metadata);
+        store.SetFacetOverride(work.WorkKey, "family_intent", null);
+        work = NewStore().Snapshot[work.WorkKey];
+        Assert.Empty(work.Facets); Assert.NotNull(work.Rating); Assert.NotNull(work.Metadata);
+    }
     [Fact] public void SnapshotDoesNotChangeWhenStorePublishesNewRecords()
     {
         var store = NewStore(); store.Import(new() { Items = [Work()] }); var before = store.Snapshot;

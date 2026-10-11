@@ -29,6 +29,8 @@ public sealed record MediaCandidate
     public DateTimeOffset AddedAt { get; init; }
     public string[] Genres { get; init; } = [];
     public string[] Tags { get; init; } = [];
+    public int? ProductionYear { get; init; }
+    public string? OfficialRating { get; init; }
     public long?[] Runtimes { get; init; } = [];
     public LocalEpisode[] Episodes { get; init; } = [];
     public string EpisodeOrder { get; init; } = "aired";
@@ -97,8 +99,19 @@ public sealed record WorkEvidence
     public string? PopularityProvider { get; init; }
     public DateTimeOffset? ProviderFetchedAt { get; init; }
     public string[] Keywords { get; init; } = [];
+    public CatalogueMetadata? Metadata { get; init; }
     public AwardRecord[] Awards { get; init; } = [];
     public EpisodeManifest? Manifest { get; init; }
+}
+
+public sealed record CatalogueMetadata
+{
+    public string Source { get; init; } = "tmdb";
+    public string[] Genres { get; init; } = [];
+    public string[] Countries { get; init; } = [];
+    public int? Year { get; init; }
+    public string? SeriesType { get; init; }
+    public string? Status { get; init; }
 }
 
 public sealed record EvidenceDocument
@@ -129,6 +142,7 @@ public sealed record RowSettings
 
 public sealed record RankingContext
 {
+    public bool UseAutomaticMetadata { get; init; }
     public Guid UserId { get; init; }
     public DateTimeOffset Now { get; init; } = DateTimeOffset.UtcNow;
     public string Bucket => Now.UtcDateTime.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
@@ -139,5 +153,5 @@ public sealed record RankingContext
 }
 
 public sealed record Evaluation(bool Eligible, string Reason, double Score = 0, double Taste = .5,
-    double Quality = .5, double RowFit = .5, long? RequiredRuntimeTicks = null);
+    double Quality = .5, double RowFit = .5, long? RequiredRuntimeTicks = null, string? MatchSource = null);
 public sealed record RankedCandidate(MediaCandidate Item, Evaluation Explanation);

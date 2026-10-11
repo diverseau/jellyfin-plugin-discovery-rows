@@ -1,6 +1,18 @@
-# Discovery Rows 1.0.2 verification
+# Discovery Rows 1.0.3 verification
 
 Built on **11 October 2026, Australia/Perth**, in `/home/diverse/Projects/jellyfin-plugin-discovery-rows`. This report distinguishes runtime checks from design assumptions.
+
+## Version 1.0.3 automatic metadata
+
+Automatic matching is on by default and uses local genres/tags/year/rating plus optional cached catalogue keywords and metadata. All 16 themes and five ordinary mood facets have explicit rules; ended-miniseries metadata can support one-night/weekend checks after full episode/runtime reconciliation. Unknown signals stay unknown. Awards and pilot/first-season opinions are not guessed. Reviewed negative/positive corrections override automatic estimates; concurrent provider updates preserve those corrections. Metadata estimates are reported as `automatic_metadata`, never persisted as reviewed labels.
+
+There are 48 new automated cases on top of the 108 prior tests (156 total): positive and strict-mode cases, dark/mature family exclusions, exact terms rather than misleading substrings, precedence, missing/local/provider metadata, unknown facts, access/history gates, ended/canceled miniseries and missing episodes, movie/TV detail parsing, whole-library batching/backfill and atomic correction/provider persistence. Release builds produce zero warnings/errors.
+
+The new live suite passes 20 assertions on the exact stack. A synthetic existing title receives ordinary Family/Comedy/Animation genres, a year and catalogue keywords with no reviewed facets; actual HSS callbacks return it in Family, Books, Witchcraft and '80s shelves. Explanation sources match, another library user cannot see it, corrections immediately override warm results, reset restores matching, strict mode suppresses unreviewed picks, a newly mature rating is honored during delivery revalidation, and all result/preview calls make zero provider requests. Fixture metadata, evidence and both plugin configurations are restored in `finally`. See [automatic-metadata-verification.json](automatic-metadata-verification.json).
+
+The actual Web browser selects shelves with enough candidates (including previously disabled ones), omits an unsupported awards shelf, saves the selection, displays the automatic reason and renders Family Night. Its Include/Exclude/Reset controls change that shelf without JSON. No browser errors or provider calls occur. See [browser-automatic-verification.json](browser-automatic-verification.json). The prior startup, shared-HSS setup, bulk selection, 25 API assertions and native details/playback checks also pass on 1.0.3.
+
+Provider details/batch behavior is verified using synthetic JSON and simulated HTTP errors; no real TMDB account token was supplied. A fixture proves implementation behavior, not precision/recall over the user's 459-title library. Mood/theme rules are estimates and coverage depends on metadata. The [matching guide](AUTOMATIC_MATCHING.md) states the inputs and limits.
 
 ## Version 1.0.2 one-place selection
 
@@ -50,7 +62,7 @@ The container and artifact locks are in [build-lock.json](build-lock.json). HSS/
 
 ## Automated tests
 
-**108 passing tests, zero failures/skips** at the recorded 1.0.2 run. Release builds use warnings-as-errors and produced zero warnings/errors.
+**156 passing tests, zero failures/skips** at the recorded 1.0.3 run. Release builds use warnings-as-errors and produced zero warnings/errors.
 
 Behavioral cases include strict/inclusive minute boundaries down to a single tick; null/zero runtime; 88/105-minute editions; missing/inaccessible/long pilots; special episodes; reviewed versus unknown/negative facets; tiny/missing vote samples; rating scales and staleness; discovery exposure; exact work-linked award body/outcome/ceremony filters; missing finales; inaccessible required episodes; double-episode files; stale/unknown/unaired manifests; conflicting episode IDs; and real season-card requirements.
 

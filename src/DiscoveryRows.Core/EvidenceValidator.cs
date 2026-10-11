@@ -22,6 +22,10 @@ public static partial class EvidenceValidator
             var key = w.WorkKey;
             if (!IsWorkKey(key) || !keys.Add(key)) errors.Add($"Invalid or duplicate work key: {key}");
             if (w.Facets is null || w.Awards is null || w.Keywords is null) { errors.Add($"{key}: arrays must not be null."); continue; }
+            if (w.Metadata is { } metadata && (string.IsNullOrWhiteSpace(metadata.Source) || metadata.Source.Length > 100 || metadata.Genres is null || metadata.Countries is null
+                || metadata.Genres.Length > 100 || metadata.Countries.Length > 100 || metadata.Genres.Any(s => string.IsNullOrWhiteSpace(s) || s.Length > 200)
+                || metadata.Countries.Any(s => string.IsNullOrWhiteSpace(s) || s.Length > 200) || metadata.Year is < 1800 or > 2200
+                || metadata.SeriesType?.Length > 100 || metadata.Status?.Length > 100)) errors.Add($"{key}: invalid catalogue metadata.");
             if (w.Facets.Length > 100 || w.Awards.Length > 500 || w.Keywords.Length > 500) errors.Add($"{key}: too many evidence fields.");
             var facets = new HashSet<string>(StringComparer.Ordinal);
             foreach (var f in w.Facets)

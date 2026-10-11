@@ -62,6 +62,7 @@ public sealed class EvidenceStore
             // Enrichment never overwrites reviewed facets, exclusions or work-linked awards.
             var merged = current with { Rating = current.Rating is { Provider: not "tmdb" } ? current.Rating : provider.Rating,
                 Popularity = provider.Popularity, PopularityProvider = provider.PopularityProvider, ProviderFetchedAt = provider.ProviderFetchedAt, Keywords = provider.Keywords,
+                Metadata = current.Metadata is { Source: not "tmdb" } ? current.Metadata : provider.Metadata ?? current.Metadata,
                 Manifest = current.Manifest is { Source: not "tmdb" } ? current.Manifest : provider.Manifest ?? current.Manifest };
             var errors = EvidenceValidator.Validate(new() { Items = [merged] }, DateTimeOffset.UtcNow);
             if (errors.Count > 0) throw new InvalidDataException(string.Join("; ", errors));
@@ -69,6 +70,22 @@ public sealed class EvidenceStore
             Persist(next);
             _items = next;
             Interlocked.Increment(ref _revision);
+        }
+    }
+
+    public void SetFacetOverride(string workKey, string facet, bool? match)
+    {
+        lock (_gate)
+        {
+            var current = _items.GetValueOrDefault(workKey) ?? new WorkEvidence { WorkKey = workKey };
+            var labels = current.Facets.Where(f => f.Name != facet).ToList();
+            if (match is { } included) labels.Add(new() { Name = facet, Positive = included, Confidence = 1,
+                Reviewed = true, ReviewedAt = DateTimeOffset.UtcNow, Source = "manual_review" });
+            var updated = current with { Facets = labels.ToArray() };
+            var errors = EvidenceValidator.Validate(new() { Items = [updated] }, DateTimeOffset.UtcNow);
+            if (errors.Count > 0) throw new ArgumentException(string.Join("; ", errors));
+            var next = _items.SetItem(workKey, updated);
+            Persist(next); _items = next; LoadError = null; Interlocked.Increment(ref _revision);
         }
     }
 

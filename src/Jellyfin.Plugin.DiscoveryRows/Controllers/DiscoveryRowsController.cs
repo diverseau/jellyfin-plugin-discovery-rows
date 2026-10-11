@@ -18,6 +18,7 @@ public sealed record FeedbackRequest(Guid ItemId, bool Hidden);
 public sealed record ExclusionRequest(string WorkKey, bool Excluded);
 public sealed record RestoreRequest(string WorkKey);
 public sealed record HomepageSetupRequest(bool AllowUserSelection);
+public sealed record FacetOverrideRequest(string WorkKey, string Row, bool? Match);
 
 [ApiController]
 [Route("DiscoveryRows")]
@@ -32,7 +33,7 @@ public sealed class DiscoveryRowsController(LibrarySnapshotService index, Eviden
         indexRevision = index.Snapshot.Revision, indexedTitles = index.Snapshot.Items.Count, indexedAt = index.Snapshot.At, indexDirty = index.Dirty,
         indexError = index.LastError, evidenceRecords = evidence.Snapshot.Count, evidenceError = evidence.LoadError,
         historyError = history.LoadError, hasTmdbToken = evidence.HasToken, enrichmentStatus = enrichment.Status, providerRequests = enrichment.RequestCount,
-        cachedUsers = recommendations.CachedUsers, requests = recommendations.Requests, lastHandlerMilliseconds = recommendations.LastMilliseconds };
+        automaticMetadata = Plugin.Instance?.Configuration.UseAutomaticMetadata, cachedUsers = recommendations.CachedUsers, requests = recommendations.Requests, lastHandlerMilliseconds = recommendations.LastMilliseconds };
 
     [HttpGet("tmdb-logo.svg")]
     [AllowAnonymous]
@@ -99,6 +100,14 @@ public sealed class DiscoveryRowsController(LibrarySnapshotService index, Eviden
         catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
     }
 
+    [HttpGet("Availability")]
+    [Authorize(Roles = "Administrator")]
+    public IActionResult Availability([FromQuery] Guid userId)
+    {
+        try { return Ok(recommendations.Availability(userId)); }
+        catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
+    }
+
     [HttpGet("Preview/{row}")]
     [Authorize(Roles = "Administrator")]
     public ActionResult<QueryResult<BaseItemDto>> Preview(string row, [FromQuery] Guid userId)
@@ -138,6 +147,18 @@ public sealed class DiscoveryRowsController(LibrarySnapshotService index, Eviden
         if (!EvidenceValidator.IsWorkKey(request.WorkKey)) return BadRequest();
         var work = evidence.Snapshot.GetValueOrDefault(request.WorkKey) ?? new WorkEvidence { WorkKey = request.WorkKey };
         evidence.Import(new() { Items = [work with { Excluded = request.Excluded }] }); recommendations.Invalidate(); return NoContent();
+    }
+
+    [HttpPost("FacetOverride")]
+    [Authorize(Roles = "Administrator")]
+    public IActionResult FacetOverride([FromBody] FacetOverrideRequest request)
+    {
+        var row = RowCatalogue.Find(request.Row);
+        if (!EvidenceValidator.IsWorkKey(request.WorkKey) || row?.Facet is not { } facet) return BadRequest();
+        try { evidence.SetFacetOverride(request.WorkKey, facet, request.Match); }
+        catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
+        recommendations.Invalidate();
+        return NoContent();
     }
 
     [HttpGet("Preferences")]

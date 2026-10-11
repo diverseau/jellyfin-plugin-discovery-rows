@@ -40,7 +40,7 @@ public static class RowCatalogue
             ("family", "Family Movie Night", "family_intent"), ("nostalgia80", "Totally Awesome '80s", "1980s_nostalgia"),
             ("twistedchristmas", "Twisted Christmas", "twisted_christmas"), ("cringe", "Cringe Comedy", "cringe_comedy")
         };
-        foreach (var t in themes) yield return new(t.Key, "DiscoveryRowsTheme" + t.Key, t.Title, null, SelectorKind.Theme, Facet: t.Facet, Confidence: .8);
+        foreach (var t in themes) yield return new(t.Key, "DiscoveryRowsTheme" + t.Key, t.Title, t.Key == "family" ? MediaKind.Movie : null, SelectorKind.Theme, Facet: t.Facet, Confidence: .8);
     }
 
     public static RowSettings Defaults(RowDefinition row) => new()

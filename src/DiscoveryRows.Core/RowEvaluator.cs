@@ -29,6 +29,24 @@ public static class RowEvaluator
         if (item.Kind == MediaKind.Series && !HasStart(item)) return No("Missing, inaccessible or ambiguous regular starting episode");
         var adjusted = AdjustedRating(evidence?.Rating, settings, context.Now);
         var fit = .8;
+        string? matchSource = null, matchReason = null;
+        MetadataMatch? Resolve(string name, double confidence)
+        {
+            var review = evidence?.Facets.FirstOrDefault(f => f.Name == name && f.Reviewed);
+            if (review is not null)
+            {
+                if (!review.Positive || review.Confidence < confidence) return null;
+                matchSource ??= "reviewed_label";
+                return new("Reviewed label: " + name, review.Confidence);
+            }
+            var automatic = context.UseAutomaticMetadata ? AutomaticMetadataMatcher.Match(name, item, evidence) : null;
+            if (automatic is not null) matchSource = "automatic_metadata";
+            return automatic;
+        }
+        string Missing(string name) => evidence?.Facets.Any(f => f.Name == name && f.Reviewed && !f.Positive) == true
+            ? "Excluded by reviewed " + name + " override"
+            : context.UseAutomaticMetadata && AutomaticMetadataMatcher.Supports(name) ? "No automatic metadata match for " + name + " (genres, tags or catalogue keywords)"
+            : "Missing reviewed " + name + " evidence";
         long? runtime = null;
         switch (row.Selector)
         {
@@ -42,10 +60,16 @@ public static class RowEvaluator
                 break;
             case SelectorKind.Facet:
             case SelectorKind.Theme:
-                var facet = Facet(evidence, row.Facet!, row.Confidence);
-                if (facet is null) return No($"Missing reviewed {row.Facet} evidence");
-                fit = facet.Confidence;
-                if (row.Key == "casual" && Facet(evidence, "episodic", .75) is null) return No("Missing reviewed episodic structure");
+                var facet = Resolve(row.Facet!, row.Confidence);
+                if (facet is null) return No(Missing(row.Facet!));
+                fit = facet.Strength;
+                matchReason = facet.Reason;
+                if (row.Key == "casual")
+                {
+                    var episodic = Resolve("episodic", .75);
+                    if (episodic is null) return No(Missing("episodic"));
+                    matchReason += "; " + episodic.Reason;
+                }
                 if (row.Key == "crowd" && (adjusted is null || adjusted < settings.QualityMinimum)) return No("Missing supported audience approval");
                 break;
             case SelectorKind.Quality:
@@ -66,7 +90,12 @@ public static class RowEvaluator
             case SelectorKind.CompleteStory:
             case SelectorKind.CompleteSeries:
             case SelectorKind.FirstSeason:
-                if (row.Selector == SelectorKind.CompleteStory && Facet(evidence, "complete_limited_story", .85) is null) return No("Missing reviewed complete limited-story evidence");
+                if (row.Selector == SelectorKind.CompleteStory)
+                {
+                    var story = Resolve("complete_limited_story", .85);
+                    if (story is null) return No(Missing("complete_limited_story"));
+                    matchReason = story.Reason;
+                }
                 if (row.Selector == SelectorKind.FirstSeason && (item.FirstSeasonId is null || Facet(evidence, row.Facet!, row.Confidence) is null)) return No("Missing first-season card or reviewed first-season evidence");
                 var completeness = CompleteRuntime(item, evidence?.Manifest, context.Now, row.Selector == SelectorKind.FirstSeason);
                 if (!completeness.Complete) return No(completeness.Reason);
@@ -86,7 +115,7 @@ public static class RowEvaluator
             SelectorKind.Facet or SelectorKind.Theme => .3 * taste + .1 * quality + .5 * fit + .1 * freshness,
             _ => .35 * taste + .15 * quality + .4 * fit + .1 * freshness
         };
-        return new(true, "All factual and access gates passed", score, taste, quality, fit, runtime);
+        return new(true, matchReason ?? "All factual and access gates passed", score, taste, quality, fit, runtime, matchSource);
     }
 
     public static bool HasStart(MediaCandidate item) => item.EpisodeOrder == "aired" && item.Episodes.Any(e => e.Season == 1 && e.Number == 1 && e.Accessible && e.Runtimes.Length > 0 && e.Runtimes.All(r => r is > 0));

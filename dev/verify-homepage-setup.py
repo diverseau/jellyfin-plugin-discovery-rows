@@ -106,7 +106,7 @@ try:
     check('plugin checkbox restores shelf without another HSS or personal save', bool(cards('DiscoveryRowsUnder90Movies')) and request('/Plugins/' + hss + '/Configuration') == prepared and private_hashes() == files_before)
     status_after = request('/DiscoveryRows/HomepageSetup')
     check('setup status exposes readiness counts only', set(status_after) == {'Available','EnabledRows','LockedRows','TotalRows','Simplified'})
-    (root / 'work/homepage-setup-verification.json').write_text(json.dumps({'version':'1.0.2','passed':len(checks),'checks':checks},indent=2) + '\n')
+    (root / 'work/homepage-setup-verification.json').write_text(json.dumps({'version':request('/DiscoveryRows/Status')['pluginVersion'],'passed':len(checks),'checks':checks},indent=2) + '\n')
 finally:
     request('/DiscoveryRows/Configuration', 'PUT', original, expected=204)
     request('/Plugins/' + hss + '/Configuration', 'POST', original_hss, expected=204)

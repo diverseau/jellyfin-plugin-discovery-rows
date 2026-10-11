@@ -1,10 +1,12 @@
-# Install Discovery Rows 1.0.2
+# Install Discovery Rows 1.0.3
 
 Supported and tested stack: **Jellyfin server/Web 10.11.11, Home Screen Sections 3.0.2.0**. The development fixture also used **File Transformation 3.0.1.0 and Plugin Pages 3.0.1.0**. Native clients and Jellyfin 12.x are not certified by this release.
 
-## Update from 1.0.0 or 1.0.1
+## Update from earlier releases
 
-In Dashboard → Plugins → Catalogue, choose Discovery Rows and install **1.0.2.0**, then restart Jellyfin. Existing shelf configuration, HSS settings and plugin data are retained on upgrade. The repository URL stays the same. Open the plugin's Setup tab and use the one-time HSS setup below to enable the new shared-selection workflow; upgrading alone does not change HSS selections.
+In Dashboard → Plugins → Catalogue, choose Discovery Rows and install **1.0.3.0**, then restart Jellyfin. Existing shelf configuration, HSS settings and plugin data are retained on upgrade. The repository URL stays the same. Automatic metadata matching defaults on, including when loading old configuration. If you already completed the 1.0.2 HSS setup, you can keep that layout.
+
+Open Setup and save **Automatically match moods and themes from library metadata**. In Shelves choose a user, click **Select shelves with enough matches**, then **Save shelf settings** and refresh Home. TMDB is optional for local genre/tag/year matches; its keywords improve theme coverage.
 
 ## Install from the catalogue
 
@@ -15,15 +17,15 @@ In Dashboard → Plugins → Catalogue, choose Discovery Rows and install **1.0.
    https://raw.githubusercontent.com/diverseau/jellyfin-plugin-discovery-rows/main/manifest.json
    ```
 
-3. Click **Add**, open **Catalogue**, choose **Discovery Rows**, and install **1.0.2.0**. Restart Jellyfin.
+3. Click **Add**, open **Catalogue**, choose **Discovery Rows**, and install **1.0.3.0**. Restart Jellyfin.
 4. Follow **Configure the shelves** below.
 
-The repository provides Discovery Rows only. HSS and its dependencies must be installed separately. Jellyfin validates the downloaded ZIP against the manifest's MD5; SHA-256 hashes are also included with the [release](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.2).
+The repository provides Discovery Rows only. HSS and its dependencies must be installed separately. Jellyfin validates the downloaded ZIP against the manifest's MD5; SHA-256 hashes are also included with the [release](https://github.com/diverseau/jellyfin-plugin-discovery-rows/releases/tag/v1.0.3).
 
 ## Manual package installation
 
 1. Install HSS and its dependencies using [the publisher's repository](https://www.iamparadox.dev/jellyfin/plugins/manifest.json), selecting builds for Jellyfin 10.11.11. Restart Jellyfin if those were newly installed.
-2. Stop Jellyfin. Create `DiscoveryRows_1.0.2.0` inside **your server's actual plugins directory**, then extract `DiscoveryRows-1.0.2.0-jellyfin-10.11.11.zip` into it. On the official Docker image, that is `/config/plugins/DiscoveryRows_1.0.2.0`; package installs commonly use `/var/lib/jellyfin/plugins`. Use the path for your installation.
+2. Stop Jellyfin. Create `DiscoveryRows_1.0.3.0` inside **your server's actual plugins directory**, then extract `DiscoveryRows-1.0.3.0-jellyfin-10.11.11.zip` into it. On the official Docker image, that is `/config/plugins/DiscoveryRows_1.0.3.0`; package installs commonly use `/var/lib/jellyfin/plugins`. Use the path for your installation.
 3. Ensure the Jellyfin service account can read the extracted files and write its own data/configuration directories. Start Jellyfin.
 4. Follow **Configure the shelves** below.
 
@@ -48,21 +50,23 @@ By default each row needs **six credible candidates** and displays up to **16 ca
 
 The first 15 presets are enabled in Discovery Rows configuration. Awards, complete-story and theme presets are registered but disabled until enabled by the administrator. In shared mode, HSS keeps every Discovery entry enabled and the plugin checkboxes control visibility. In personal mode, HSS user selection is an additional filter. A registered row can legitimately remain empty.
 
-## Add reviewed evidence
+## Automatic matching and occasional corrections
 
-1. In Discovery Rows → Evidence, select a test user and find a title. Its work key is based on verified local TMDB/IMDb metadata, or its Jellyfin item ID if no provider ID exists.
-2. Choose **Edit evidence** or **Add reviewed facet**, adjust the JSON, then **Validate and import**. Use confidence 0–1, a review timestamp and source. Keep a review record/source URL where appropriate.
-3. In Preview, inspect candidate counts, rejected conditions and per-title scores.
+Automatic matching is enabled by default. Family Night uses the Family genre (or appropriate Animation/rating metadata) and excludes known mature ratings and dark genres. Comedy supports laughter; Action/Adventure/Science Fiction supports popcorn picks. Feel-Good is an estimate from explicit keywords or Comedy with Family/Romance/Animation, excluding dark genres/keywords. Existing Jellyfin tags are usable too. All 16 themes have keyword/year rules; actual coverage depends on the available metadata. See [AUTOMATIC_MATCHING.md](AUTOMATIC_MATCHING.md) for the rules and limits.
 
-Imports replace the included work keys while preserving other records. Provider updates retain manual facets, exclusions, non-TMDB ratings, manual manifests and awards. Evidence export omits credentials and personal user history. Example formats are in the source repository's `samples/` directory; placeholders must be replaced with your actual work keys and facts.
+In Shelves, **Select shelves with enough matches** evaluates all 38 shelves, including disabled ones, for the selected user using saved eligibility settings. It changes only enabled checkboxes; **Save shelf settings** applies them. Coordination can still leave overlapping shelves below their minimum. Empty optional awards/opinion shelves need not be selected.
 
-Mood rows need reviewed labels; general Comedy does not automatically mean feel-good, popcorn or a strong opening. Awards require body, ceremony year, category, outcome, exact work link and evidence URL. Person-only awards do not qualify a film. Complete-story rows require reconciled required episodes plus reviewed complete-limited-story evidence. Ended/canceled status alone does not establish a resolved story.
+Preview shows the exact genre, tag, keyword or year behind each automatic match. Estimates are never saved as reviewed labels. If a pick is wrong, use **Remove from this shelf** in Preview. In Evidence, find a title, choose a shelf, and use **Include in selected shelf**, **Exclude from selected shelf**, or **Reset to automatic**. These are administrator corrections shared by users, subject to each user's access/history; individual users can still hide titles through Discovery preferences. Turn automatic matching off in Setup for reviewed-only operation.
+
+Advanced JSON import/export remains for factual awards and curated records. Imports replace included work keys while preserving other records; provider updates retain reviewed facets, exclusions, awards and manual metadata/manifests. Awards still need a specific work, body, ceremony, category, outcome and source. Strong-pilot/first-season opinion rows still need reviewed labels; they are not inferred from the rating of an entire series.
+
+One-night/weekend rows can use TMDB's **Ended + Miniseries** metadata without a hand-written story label, but require a fresh complete episode manifest, all required local accessible episodes and the total runtime within the limit. This is a complete airing/file check, not a guarantee of a satisfying narrative ending. Canceled status alone does not qualify automatically.
 
 ## Optional TMDB
 
-Set an **API read access token** in Setup, enable TMDB, save settings, and run **Discovery Rows: optional TMDB enrichment** from Scheduled Tasks or the plugin page. An API key is not the same credential as the read access bearer token. The token is stored separately and is never returned by status/configuration/export endpoints.
+Set an **API read access token** once in Setup, enable TMDB, save settings, and click **Enrich whole library** (or run **Discovery Rows: optional TMDB enrichment**) from Scheduled Tasks or the plugin page. An API key is not the same credential as the read access bearer token. The token is stored separately and is never returned by status/configuration/export endpoints.
 
-Only existing local provider IDs and metadata parameters go to TMDB; viewing history stays local. Jobs run in bounded batches with a rate budget, timeouts and limited retries. Homepage callbacks do not invoke providers or classifiers. Invalid credentials stop repeated retries until replaced. Existing evidence is retained on provider errors.
+Only existing local provider IDs and metadata parameters go to TMDB; viewing history stays local. One run processes all eligible missing/stale local TMDB IDs in batches; it no longer stops after the first 100. Existing older records are backfilled with catalogue metadata. The six-hour scheduled task maintains the cache. Jobs have a rate budget, cancellation, timeouts and limited retries. Homepage callbacks do not invoke providers or classifiers. Invalid credentials stop repeated retries until replaced. Existing evidence is retained on provider errors.
 
 ## Personal preferences
 
@@ -80,7 +84,7 @@ Use **Discovery preferences** in the user menu (Plugin Pages) to find titles and
 
 **Registered but absent:** use Setup → Enable all shelves in HSS, restart once, and confirm Modular Home is enabled for the user. Check the desired shelf is enabled in Discovery Rows, then inspect Preview for minimum-size or missing-evidence conditions.
 
-**Preview has cards but Home omits the shelf:** use Discovery Rows 1.0.2.0 or later and restart Jellyfin after updating. Version 1.0.1 fixed the startup registration issue: 1.0.0 could register after the initial HSS layout had already been cached. Separately, HSS 3.0.2.0 can retain an old row order after settings changes; restarting the server clears that cache. Browser refresh alone may reuse it. Orders 20–25 place the rows after existing rows with smaller order numbers.
+**Preview has cards but Home omits the shelf:** use Discovery Rows 1.0.3.0 or later and restart Jellyfin after updating. Version 1.0.1 fixed the startup registration issue: 1.0.0 could register after the initial HSS layout had already been cached. Separately, HSS 3.0.2.0 can retain an old row order after settings changes; restarting the server clears that cache. Browser refresh alone may reuse it. Orders 20–25 place the rows after existing rows with smaller order numbers.
 
 **First user selection reverts:** on a fresh HSS 3.0.2.0 install, its first per-user Modular Home save can create an empty settings file without saving the selection. Reopen Modular Home and save again. This was observed in the fixture and matches the [tagged HSS save implementation](https://github.com/IAmParadox27/jellyfin-plugin-home-sections/blob/d9798e410cacd4b8fbac4f57fcf3d5c05dd42dbd/src/Jellyfin.Plugin.HomeScreenSections/HomeScreen/HomeScreenManager.cs). Discovery Rows honors the effective selection once persisted and does not modify HSS's private settings files.
 

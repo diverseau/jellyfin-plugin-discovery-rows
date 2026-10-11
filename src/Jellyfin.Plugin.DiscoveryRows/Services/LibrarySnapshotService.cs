@@ -78,6 +78,7 @@ public sealed class LibrarySnapshotService : IDisposable
             var season = item is Series ? _library.GetItemList(new InternalItemsQuery { ParentId = item.Id, IncludeItemTypes = [BaseItemKind.Season], IsVirtualItem = false }).OfType<Season>().FirstOrDefault(s => s.IndexNumber == 1)?.Id : null;
             result.Add(new() { Id = item.Id, WorkKey = key, Name = item.Name, Kind = kind, Available = sources.Item1,
                 Runtimes = sources.Item2, Episodes = regular, Genres = item.Genres.ToArray(), Tags = item.Tags.ToArray(),
+                ProductionYear = item.ProductionYear, OfficialRating = item.OfficialRating,
                 AddedAt = new DateTimeOffset(DateTime.SpecifyKind(item.DateCreated, DateTimeKind.Utc)),
                 EpisodeOrder = item is Series series && !string.IsNullOrEmpty(series.DisplayOrder) ? series.DisplayOrder.ToLowerInvariant() : "aired",
                 FirstSeasonId = season, FranchiseKey = item.ProviderIds.GetValueOrDefault("TmdbCollection") });
@@ -127,7 +128,7 @@ public sealed class LibrarySnapshotService : IDisposable
             var genres = current.Genres.Select(g => configuration.GenreAliases.FirstOrDefault(a => a.Source.Equals(g, StringComparison.OrdinalIgnoreCase))?.Canonical ?? g).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
             result.Add(item with { Started = ud?.Played == true || ud?.PlaybackPositionTicks > 0 || ud?.PlayCount > 0 || eps.Any(e => e.Season > 0 && e.Started),
                 Favourite = ud?.IsFavorite ?? false, Liked = ud?.Likes, LastPlayedAt = ud?.LastPlayedDate is { } played ? new DateTimeOffset(DateTime.SpecifyKind(played, DateTimeKind.Utc)) : null,
-                Episodes = eps, Genres = genres, Tags = current.Tags.ToArray() });
+                Episodes = eps, Genres = genres, Tags = current.Tags.ToArray(), ProductionYear = current.ProductionYear, OfficialRating = current.OfficialRating });
         }
         return result.ToArray();
     }
@@ -149,7 +150,8 @@ public sealed class LibrarySnapshotService : IDisposable
         var currentSource = actual is Movie ? Sources(actual) : (episodes.Any(e => e.Accessible), Array.Empty<long?>());
         return cached with { Available = currentSource.Item1, Runtimes = currentSource.Item2, Episodes = episodes,
             Started = ud?.Played == true || ud?.PlaybackPositionTicks > 0 || ud?.PlayCount > 0 || episodes.Any(e => e.Season > 0 && e.Started),
-            Genres = actual.Genres.Select(g => config.GenreAliases.FirstOrDefault(a => a.Source.Equals(g, StringComparison.OrdinalIgnoreCase))?.Canonical ?? g).ToArray() };
+            Genres = actual.Genres.Select(g => config.GenreAliases.FirstOrDefault(a => a.Source.Equals(g, StringComparison.OrdinalIgnoreCase))?.Canonical ?? g).ToArray(),
+            Tags = actual.Tags.ToArray(), ProductionYear = actual.ProductionYear, OfficialRating = actual.OfficialRating };
     }
 
     public void Dispose()

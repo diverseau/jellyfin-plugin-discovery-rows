@@ -127,7 +127,7 @@ public sealed class RecommendationService : IDisposable
             var max = Math.Max(1, scores.Values.DefaultIfEmpty(1).Max());
             var evidence = _evidence.Snapshot;
             var popularity = media.Where(m => m.Kind == MediaKind.Movie).GroupBy(m => m.WorkKey, StringComparer.Ordinal).Select(g => evidence.GetValueOrDefault(g.Key)).Where(e => e?.ProviderFetchedAt >= now.AddDays(-90) && e.PopularityProvider == "tmdb" && e.Popularity is >= 0).Select(e => e!.Popularity!.Value).Order().ToArray();
-            var context = new RankingContext { UserId = user.Id, Now = now, GenreTaste = scores.ToDictionary(s => s.Key, s => Math.Clamp(.5 + .45 * s.Value / max, 0, 1), StringComparer.OrdinalIgnoreCase),
+            var context = new RankingContext { UserId = user.Id, Now = now, UseAutomaticMetadata = config.UseAutomaticMetadata, GenreTaste = scores.ToDictionary(s => s.Key, s => Math.Clamp(.5 + .45 * s.Value / max, 0, 1), StringComparer.OrdinalIgnoreCase),
                 HiddenWorks = _history.Hidden(user.Id), RecentlyDelivered = _history.Recent(user.Id, now),
                 ExposureCutoff = popularity.Length >= 50 ? popularity[(int)Math.Floor((popularity.Length - 1) * .4)] : null };
             var ranked = RowCatalogue.All.Where(r => keys.Contains(r.Key, StringComparer.Ordinal) && config.GetRow(r).Enabled).Select(r => (Settings: config.GetRow(r), Candidates: RowEvaluator.Rank(r, config.GetRow(r), media, evidence, context))).ToList();
@@ -138,6 +138,16 @@ public sealed class RecommendationService : IDisposable
             _cache[user.Id] = plan;
             return plan;
         }
+    }
+
+    public object Availability(Guid userId)
+    {
+        var user = GetUser(userId) ?? throw new ArgumentException("User unavailable.");
+        var config = Plugin.Instance?.Configuration ?? throw new InvalidOperationException("Plugin unavailable.");
+        var media = _index.ForUser(user, config);
+        var context = Plan(user, config).Context;
+        return RowCatalogue.All.Select(r => new { key = r.Key, title = r.Title,
+            candidates = RowEvaluator.Rank(r, config.GetRow(r) with { Enabled = true }, media, _evidence.Snapshot, context).Length }).ToArray();
     }
 
     public object Coverage(Guid userId, string? key = null, int take = 20)

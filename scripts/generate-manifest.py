@@ -36,7 +36,7 @@ manifest = [{
     "guid": "b87d3d47-7a2d-43c6-89d2-592885b90d3e",
     "name": "Discovery Rows",
     "overview": "Time, mood, awards and personal discovery shelves for Home Screen Sections.",
-    "description": "Adds 38 discovery shelves for local playable media with one-click HSS setup and shared selection from the plugin dashboard. Includes time-based picks, reviewed moods, awards, complete stories, personal exclusions and administrator previews. Requires Jellyfin 10.11.11 and Home Screen Sections 3.0.2.0 with File Transformation and Plugin Pages. Mood and award shelves require reviewed evidence; optional TMDB enrichment is configured separately.",
+    "description": "Adds 38 discovery shelves for local playable media with one-click HSS setup and shared selection from the plugin dashboard. Includes time-based picks, reviewed moods, awards, complete stories, personal exclusions and administrator previews. Requires Jellyfin 10.11.11 and Home Screen Sections 3.0.2.0 with File Transformation and Plugin Pages. Moods and themes automatically match library genres, tags, year and optional TMDB keywords. Includes simple corrections, populated-shelf selection and whole-library enrichment. Awards still require actual records.",
     "owner": "diverseau",
     "category": "General",
     "versions": [{

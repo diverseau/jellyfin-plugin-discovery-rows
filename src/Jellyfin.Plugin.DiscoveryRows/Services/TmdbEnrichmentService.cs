@@ -35,37 +35,64 @@ public sealed class TmdbEnrichmentService
             if (config?.EnableTmdb != true || token is null) { Status = "Offline mode; TMDB is disabled or has no credential"; return; }
             if (_authFailed) { Status = "TMDB rejected the credential; update it before retrying"; return; }
             var now = DateTimeOffset.UtcNow;
-            var candidates = _index.Snapshot.Items.Values.Where(i => i.WorkKey.Contains(":tmdb:", StringComparison.Ordinal)).GroupBy(i => i.WorkKey).Select(g => g.First())
-                .Where(i => _evidence.Snapshot.GetValueOrDefault(i.WorkKey)?.ProviderFetchedAt is not { } at || at < now.AddDays(-7))
-                .OrderBy(i => _evidence.Snapshot.GetValueOrDefault(i.WorkKey)?.ProviderFetchedAt ?? DateTimeOffset.MinValue).Take(config.EnrichmentBatchSize).ToArray();
-            for (var n = 0; n < candidates.Length; n++)
+            var batches = PendingBatches(_index.Snapshot.Items.Values, _evidence.Snapshot, now, config.EnrichmentBatchSize);
+            var total = batches.Sum(b => b.Length);
+            var examined = 0;
+            foreach (var batch in batches)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                var item = candidates[n];
-                Status = $"Enriching {n + 1} of {candidates.Length} local works";
-                try
+                foreach (var item in batch)
                 {
-                    var id = item.WorkKey.Split(':')[2];
-                    var type = item.Kind == MediaKind.Movie ? "movie" : "tv";
-                    using var response = await FetchAsync($"{type}/{id}?append_to_response=keywords&language=en-US", token, cancellationToken).ConfigureAwait(false);
-                    if (response is null) { if (_authFailed) break; continue; }
-                    var root = response.RootElement;
-                    var keywords = root.TryGetProperty("keywords", out var kw) ? (kw.TryGetProperty("keywords", out var movieKw) ? movieKw : kw.TryGetProperty("results", out var tvKw) ? tvKw : default) : default;
-                    var keywordNames = keywords.ValueKind == JsonValueKind.Array ? keywords.EnumerateArray().Select(k => k.GetProperty("name").GetString() ?? "").Where(s => s.Length > 0).Take(500).ToArray() : [];
-                    var evidence = new WorkEvidence { WorkKey = item.WorkKey, Rating = new() { Provider = "tmdb", Value = root.GetProperty("vote_average").GetDouble(), Scale = 10,
-                        Votes = root.GetProperty("vote_count").GetInt64(), FetchedAt = DateTimeOffset.UtcNow }, Popularity = root.GetProperty("popularity").GetDouble(),
-                        ProviderFetchedAt = DateTimeOffset.UtcNow, PopularityProvider = "tmdb", Keywords = keywordNames };
-                    if (item.Kind == MediaKind.Series) evidence = evidence with { Manifest = await ManifestAsync(item.WorkKey, id, root, token, cancellationToken).ConfigureAwait(false) };
-                    _evidence.UpdateProvider(evidence);
+                    examined++;
+                    cancellationToken.ThrowIfCancellationRequested();
+                    Status = $"Enriching {examined} of {total} local works";
+                    try
+                    {
+                        var id = item.WorkKey.Split(':')[2];
+                        var type = item.Kind == MediaKind.Movie ? "movie" : "tv";
+                        using var response = await FetchAsync($"{type}/{id}?append_to_response=keywords&language=en-US", token, cancellationToken).ConfigureAwait(false);
+                        if (response is null) { if (_authFailed) break; continue; }
+                        var root = response.RootElement;
+                        var evidence = ParseDetails(item.WorkKey, root, DateTimeOffset.UtcNow);
+                        if (item.Kind == MediaKind.Series) evidence = evidence with { Manifest = await ManifestAsync(item.WorkKey, id, root, token, cancellationToken).ConfigureAwait(false) };
+                        _evidence.UpdateProvider(evidence);
+                    }
+                    catch (Exception ex) when (ex is HttpRequestException or JsonException or InvalidDataException or KeyNotFoundException or IOException)
+                    { _logger.LogWarning("TMDB enrichment failed for {Work}: {Type}; prior evidence retained", item.WorkKey, ex.GetType().Name); }
+                    progress.Report(100.0 * examined / Math.Max(1, total));
                 }
-                catch (Exception ex) when (ex is HttpRequestException or JsonException or InvalidDataException or KeyNotFoundException or IOException)
-                { _logger.LogWarning("TMDB enrichment failed for {Work}: {Type}; prior evidence retained", item.WorkKey, ex.GetType().Name); }
-                progress.Report(100.0 * (n + 1) / Math.Max(1, candidates.Length));
+                _recommendations.Invalidate();
+                if (_authFailed) break;
             }
-            _recommendations.Invalidate();
-            if (!_authFailed) Status = $"Enrichment finished; examined {candidates.Length} local works";
+            if (!_authFailed) { Status = $"Enrichment finished; examined {examined} of {total} local works"; progress.Report(100); }
         }
         finally { _run.Release(); }
+    }
+
+    internal static MediaCandidate[][] PendingBatches(IEnumerable<MediaCandidate> items, IReadOnlyDictionary<string, WorkEvidence> evidence, DateTimeOffset now, int batchSize) => items
+        .Where(i => i.WorkKey.Contains(":tmdb:", StringComparison.Ordinal)).GroupBy(i => i.WorkKey).Select(g => g.First())
+        .Where(i => evidence.GetValueOrDefault(i.WorkKey)?.Metadata is null || evidence.GetValueOrDefault(i.WorkKey)?.ProviderFetchedAt is not { } at || at < now.AddDays(-7))
+        .OrderBy(i => evidence.GetValueOrDefault(i.WorkKey)?.ProviderFetchedAt ?? DateTimeOffset.MinValue)
+        .ThenBy(i => i.WorkKey, StringComparer.Ordinal).Chunk(batchSize).ToArray();
+
+    internal static WorkEvidence ParseDetails(string key, JsonElement root, DateTimeOffset now)
+    {
+        var keywords = root.TryGetProperty("keywords", out var kw) ? (kw.TryGetProperty("keywords", out var movieKw) ? movieKw : kw.TryGetProperty("results", out var tvKw) ? tvKw : default) : default;
+        string[] Names(JsonElement array, string property) => array.ValueKind == JsonValueKind.Array
+            ? array.EnumerateArray().Where(e => e.TryGetProperty(property, out var p) && p.ValueKind == JsonValueKind.String)
+                .Select(e => e.GetProperty(property).GetString()!).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct(StringComparer.OrdinalIgnoreCase).Take(100).ToArray() : [];
+        var keywordNames = keywords.ValueKind == JsonValueKind.Array ? keywords.EnumerateArray().Select(k => k.GetProperty("name").GetString() ?? "").Where(s => s.Length > 0).Take(500).ToArray() : [];
+        var genreNames = root.TryGetProperty("genres", out var genres) ? Names(genres, "name") : [];
+        var countries = root.TryGetProperty("production_countries", out var production) ? Names(production, "iso_3166_1") : [];
+        if (root.TryGetProperty("origin_country", out var origins) && origins.ValueKind == JsonValueKind.Array)
+            countries = countries.Concat(origins.EnumerateArray().Where(e => e.ValueKind == JsonValueKind.String).Select(e => e.GetString()!)).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct(StringComparer.OrdinalIgnoreCase).Take(100).ToArray();
+        int? year = null;
+        var dateName = key.StartsWith("movie:", StringComparison.Ordinal) ? "release_date" : "first_air_date";
+        if (root.TryGetProperty(dateName, out var date) && date.ValueKind == JsonValueKind.String && DateOnly.TryParseExact(date.GetString(), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var parsed)) year = parsed.Year;
+        string? String(string name) => root.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String ? value.GetString() : null;
+        return new() { WorkKey = key, Rating = new() { Provider = "tmdb", Value = root.GetProperty("vote_average").GetDouble(), Scale = 10,
+            Votes = root.GetProperty("vote_count").GetInt64(), FetchedAt = now }, Popularity = root.GetProperty("popularity").GetDouble(),
+            ProviderFetchedAt = now, PopularityProvider = "tmdb", Keywords = keywordNames,
+            Metadata = new() { Genres = genreNames, Countries = countries, Year = year, SeriesType = String("type"), Status = String("status") } };
     }
 
     private async Task<EpisodeManifest?> ManifestAsync(string key, string id, JsonElement root, string token, CancellationToken cancellationToken)

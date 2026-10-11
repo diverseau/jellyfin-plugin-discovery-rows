@@ -1,0 +1,27 @@
+{
+  "version": "1.0.3",
+  "passed": 20,
+  "checks": [
+    "existing configuration enables automatic mode on upgrade",
+    "family matches existing genres/year or keywords without reviewed facets",
+    "family returns actual HSS cards",
+    "books matches existing genres/year or keywords without reviewed facets",
+    "books returns actual HSS cards",
+    "witchcraft matches existing genres/year or keywords without reviewed facets",
+    "witchcraft returns actual HSS cards",
+    "nostalgia80 matches existing genres/year or keywords without reviewed facets",
+    "nostalgia80 returns actual HSS cards",
+    "automatic matching never writes reviewed labels",
+    "automatic shelves respect separate library access",
+    "availability and shared corrections are administrator-only",
+    "facet corrections cannot fabricate award records",
+    "availability can discover disabled shelves without changing configuration",
+    "simple shelf correction immediately overrides a warm automatic result",
+    "shelf-specific correction leaves other shelves intact",
+    "reset restores automatic matching without JSON editing",
+    "strict reviewed-only mode remains available",
+    "fresh metadata revalidation removes a newly mature Family Night candidate",
+    "homepage and preview matching perform zero provider calls"
+  ],
+  "data": "Synthetic fixture metadata, not real-library classification accuracy."
+}

@@ -61,7 +61,7 @@ const assert = require('node:assert/strict');
     await page.waitForLoadState('networkidle');
     await page.screenshot({path:'work/screenshots/one-place-home.png',fullPage:true});
     assert.deepEqual(errors,[]);
-    fs.writeFileSync('work/browser-setup-verification.json',JSON.stringify({version:'1.0.2',setupButton:true,sharedSelection:true,selectAll:38,clearSelection:0,explicitSave:true,otherShelfOptionsPreserved:true,savedSelectionReloads:true,disabledShelfHidden:true,enabledShelfReturns:true,browserErrors:errors},null,2)+'\n');
+    fs.writeFileSync('work/browser-setup-verification.json',JSON.stringify({version:(await api('/DiscoveryRows/Status')).pluginVersion,setupButton:true,sharedSelection:true,selectAll:38,clearSelection:0,explicitSave:true,otherShelfOptionsPreserved:true,savedSelectionReloads:true,disabledShelfHidden:true,enabledShelfReturns:true,browserErrors:errors},null,2)+'\n');
     console.log('Browser setup checks passed: one click, select all, clear, explicit save, unchanged sizes/filters, persistence, real homepage hide/show.');
   } finally {
     await api('/DiscoveryRows/Configuration','PUT',original);
