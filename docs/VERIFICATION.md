@@ -12,6 +12,8 @@ The new live suite passes 20 assertions on the exact stack. A synthetic existing
 
 The actual Web browser selects shelves with enough candidates (including previously disabled ones), omits an unsupported awards shelf, saves the selection, displays the automatic reason and renders Family Night. Its Include/Exclude/Reset controls change that shelf without JSON. No browser errors or provider calls occur. See [browser-automatic-verification.json](browser-automatic-verification.json). The prior startup, shared-HSS setup, bulk selection, 25 API assertions and native details/playback checks also pass on 1.0.3.
 
+The published archive was fetched anonymously and checked against manifest MD5 and release SHA-256. A normal Catalogue upgrade from 1.0.2.0 loads 1.0.3.0, registers all shelves and retains preferences/configuration and evidence export; the stored evidence file remains byte-for-byte unchanged. Automatic mode defaults on and the new availability endpoint works. All 16 publication/upgrade assertions pass. See [upgrade-verification-103.json](upgrade-verification-103.json).
+
 Provider details/batch behavior is verified using synthetic JSON and simulated HTTP errors; no real TMDB account token was supplied. A fixture proves implementation behavior, not precision/recall over the user's 459-title library. Mood/theme rules are estimates and coverage depends on metadata. The [matching guide](AUTOMATIC_MATCHING.md) states the inputs and limits.
 
 ## Version 1.0.2 one-place selection
