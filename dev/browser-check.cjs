@@ -2,6 +2,8 @@ const { chromium } = require('../work/browser/node_modules/playwright-core');
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 (async () => {
+  const fixturePassword = process.env.DISCOVERY_FIXTURE_PASSWORD;
+  assert.ok(fixturePassword, "Set DISCOVERY_FIXTURE_PASSWORD for the disposable fixture before running this check.");
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
   const errors = []; const providerCalls = []; const playbackCalls = [];
@@ -17,7 +19,7 @@ const assert = require('node:assert/strict');
   await page.goto(base + '/web/index.html#/login');
   await page.waitForTimeout(1500);
   await page.locator('#txtManualName').fill('fixture-admin');
-  await page.locator('#txtManualPassword').fill('Fixture-only-2026!');
+  await page.locator('#txtManualPassword').fill(fixturePassword);
   await page.getByRole('button', { name: 'Sign In', exact: true }).click();
   await page.waitForURL(/#\/home$/);
   await page.locator('.DiscoveryRowsUnder90Movies .card').first().waitFor();

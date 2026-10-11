@@ -2,6 +2,8 @@ const { chromium } = require('../work/browser/node_modules/playwright-core');
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 (async () => {
+  const fixturePassword = process.env.DISCOVERY_FIXTURE_PASSWORD;
+  assert.ok(fixturePassword, "Set DISCOVERY_FIXTURE_PASSWORD for the disposable fixture before running this check.");
   const base = 'http://127.0.0.1:18096';
   const auth = JSON.parse(fs.readFileSync('work/fixture/auth.json','utf8')).admin;
   const headers = { 'X-Emby-Token': auth.token, 'Content-Type':'application/json' };
@@ -24,7 +26,7 @@ const assert = require('node:assert/strict');
   try {
     await page.goto(base+'/web/index.html#/login');
     await page.locator('#txtManualName').fill('fixture-admin');
-    await page.locator('#txtManualPassword').fill('Fixture-only-2026!');
+    await page.locator('#txtManualPassword').fill(fixturePassword);
     await page.getByRole('button',{name:'Sign In',exact:true}).click();
     await page.waitForURL(/#\/home$/);
     await page.locator('.DiscoveryRowsUnder90Movies .card').first().waitFor();

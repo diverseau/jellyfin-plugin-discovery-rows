@@ -1,6 +1,6 @@
 # Discovery Rows 1.0.3 verification
 
-Built on **11 October 2026, Australia/Perth**, in `/home/diverse/Projects/jellyfin-plugin-discovery-rows`. This report distinguishes runtime checks from design assumptions.
+Built and verified on **11 October 2026**. This report distinguishes runtime checks from design assumptions.
 
 ## Version 1.0.3 automatic metadata
 
@@ -14,7 +14,7 @@ The actual Web browser selects shelves with enough candidates (including previou
 
 The published archive was fetched anonymously and checked against manifest MD5 and release SHA-256. A normal Catalogue upgrade from 1.0.2.0 loads 1.0.3.0, registers all shelves and retains preferences/configuration and evidence export; the stored evidence file remains byte-for-byte unchanged. Automatic mode defaults on and the new availability endpoint works. All 16 publication/upgrade assertions pass. See [upgrade-verification-103.json](upgrade-verification-103.json).
 
-Provider details/batch behavior is verified using synthetic JSON and simulated HTTP errors; no real TMDB account token was supplied. A fixture proves implementation behavior, not precision/recall over the user's 459-title library. Mood/theme rules are estimates and coverage depends on metadata. The [matching guide](AUTOMATIC_MATCHING.md) states the inputs and limits.
+Provider details/batch behavior is verified using synthetic JSON and simulated HTTP errors; no real TMDB account token was supplied. A fixture proves implementation behavior, not precision/recall over a production library. Mood/theme rules are estimates and coverage depends on metadata. The [matching guide](AUTOMATIC_MATCHING.md) states the inputs and limits.
 
 ## Version 1.0.2 one-place selection
 

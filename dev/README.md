@@ -10,7 +10,7 @@ jellyfin/jellyfin@sha256:aefb67e6a7ff1debdd154a78a7bbb780fd0c873d8639210a7f6a201
 
 The source lock lists exact companion artifacts. Their downloaded SHA-256 values are in `docs/build-lock.json`; published MD5 values were checked too. The fixture has 13 movie files and seven two-episode series. Each file is a tiny synthetic H.264 MP4, with local NFO metadata; remote metadata/image providers are disabled for the fixture libraries.
 
-Accounts `fixture-admin`, `fixture-a`, `fixture-b`, and `fixture-child` use the development-only password `Fixture-only-2026!`. A/child have MoviesA + ShowsA; B has MoviesB. The child blocks a tag and high parental rating. This is deliberately disposable test data, never an example deployment configuration.
+Create disposable accounts `fixture-admin`, `fixture-a`, `fixture-b`, and `fixture-child` with a local test password. Supply that password to browser checks through `DISCOVERY_FIXTURE_PASSWORD`; never commit it. A/child have MoviesA + ShowsA; B has MoviesB. The child blocks a tag and high parental rating. This is deliberately disposable test data, never an example deployment configuration.
 
 ## Re-run against the retained fixture
 
@@ -20,7 +20,10 @@ Accounts `fixture-admin`, `fixture-a`, `fixture-b`, and `fixture-child` use the 
 # Start the existing named fixture, then wait for startup/registration/indexing.
 python dev/verify-server.py
 npm install --prefix work/browser --no-audit --no-fund playwright-core@1.64.0
+read -r -s -p "Fixture password: " DISCOVERY_FIXTURE_PASSWORD
+export DISCOVERY_FIXTURE_PASSWORD
 node dev/browser-check.cjs
+unset DISCOVERY_FIXTURE_PASSWORD
 ```
 
 `verify-server.py` checks the server's version and fixture name before mutations. It validates identity/access, editorial and awards imports, local completeness, user preferences, warm-cache policy changes, parallel ordering and absence of provider work on the result path. Synthetic evidence is saved only under `work/fixture` and never packaged. Configuration is restored at successful completion; if interrupted, inspect the fixture's settings before rerunning.

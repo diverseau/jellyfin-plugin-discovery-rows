@@ -10,3 +10,7 @@ artifacts/
 *.suo
 __pycache__/
 *.pyc
+
+# Local authentication and credential exports
+auth.json
+credentials.json

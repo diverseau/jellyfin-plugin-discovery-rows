@@ -1,6 +1,8 @@
 const {chromium}=require('../work/browser/node_modules/playwright-core');
 const fs=require('node:fs');const assert=require('node:assert/strict');
 (async()=>{
+ const fixturePassword=process.env.DISCOVERY_FIXTURE_PASSWORD;
+ assert.ok(fixturePassword,"Set DISCOVERY_FIXTURE_PASSWORD for the disposable fixture before running this check.");
  const base='http://127.0.0.1:18096';const auth=JSON.parse(fs.readFileSync('work/fixture/auth.json','utf8')).admin;
  const headers={'X-Emby-Token':auth.token,'Content-Type':'application/json'};
  async function api(path,method='GET',body){const r=await fetch(base+path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});assert.ok(r.ok,path+' HTTP '+r.status);return r.status===204?null:r.json();}
@@ -18,7 +20,7 @@ const fs=require('node:fs');const assert=require('node:assert/strict');
   await api('/DiscoveryRows/Evidence','PUT',{SchemaVersion:1,Items:[data]});
   const config=structuredClone(original);config.UseAutomaticMetadata=true;config.CoordinateRows=false;for(const r of config.Rows){r.Enabled=r.Key==='under90';r.Minimum=1;r.Limit=8;r.ExcludeStarted=false;}
   await api('/DiscoveryRows/Configuration','PUT',config);await api('/DiscoveryRows/HomepageSetup','POST',{allowUserSelection:false});
-  await page.goto(base+'/web/index.html#/login');await page.locator('#txtManualName').fill('fixture-admin');await page.locator('#txtManualPassword').fill('Fixture-only-2026!');await page.getByRole('button',{name:'Sign In',exact:true}).click();
+  await page.goto(base+'/web/index.html#/login');await page.locator('#txtManualName').fill('fixture-admin');await page.locator('#txtManualPassword').fill(fixturePassword);await page.getByRole('button',{name:'Sign In',exact:true}).click();
   await page.waitForURL(/#\/home$/);await page.locator('.DiscoveryRowsUnder90Movies .card').first().waitFor();await page.waitForLoadState('networkidle');
   await settings();assert.ok(await page.locator('#drAutomatic').isChecked());await page.screenshot({path:'work/screenshots/automatic-setup.png',fullPage:true});
   await page.getByRole('button',{name:'Shelves',exact:true}).click();

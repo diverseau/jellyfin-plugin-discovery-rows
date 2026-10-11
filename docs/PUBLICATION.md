@@ -21,6 +21,8 @@ python scripts/generate-manifest.py \
 
 Publish the ZIP, `SHA256SUMS` and `release.json` as release assets before publishing the manifest that points to them. Do not rebuild or replace a published version's archive; changing it requires updating the checksum and is unsuitable for immutable releases. For future versions, update assembly/package metadata and retain prior version entries in the manifest, newest first. The generator reads the current project version and keeps prior entries from `manifest.json`; copy the generated manifest into place only after its release archive is live.
 
+Before publishing, check tracked files and source archives for personal filesystem paths, email addresses, local server addresses and credentials. Build paths are mapped to `/_/` so assemblies do not expose the maintainer's checkout location. Keep private research inputs and authentication exports under ignored `work/`.
+
 Only tracked source and release artifacts are published. Ignored `work/` contains disposable server data and access tokens and must never be uploaded. Upstream Jellyfin/HSS assemblies are not included in our ZIP.
 
 Verify anonymous retrieval of both URLs, compare MD5/SHA-256, then add the repository and perform a catalogue installation on a disposable Jellyfin 10.11.11 instance. Restart it and confirm the loaded assembly version, HSS registration and administrator status endpoint. Production installation remains the user's choice.

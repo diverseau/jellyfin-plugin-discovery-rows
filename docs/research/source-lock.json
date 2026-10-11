@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
   "researchDate": "2026-10-11",
-  "researchTimezone": "Australia/Perth",
   "capturedAtUtc": "2026-10-10T19:34:28.993704+00:00",
   "target": {
     "jellyfin": "10.11.11",
@@ -59,11 +58,6 @@
       "publisherChecksum": "9C0414F8813D0CDFBD29F3F4CA218069"
     }
   ],
-  "originalDocument": {
-    "path": "/home/diverse/Downloads/netflix-rows-jellyfin-hss-research.md",
-    "sha256": "5872d7ac278550403f268a2de76fdb99932dbfa72cef0809dbde5e99a68e4e56",
-    "preservedCopy": "original-netflix-rows-research.md"
-  },
   "primaryDocumentation": [
     "https://jellyfin.org/docs/general/server/plugins/",
     "https://github.com/IAmParadox27/jellyfin-plugin-home-sections/releases/tag/3.0.2.0",

@@ -2,7 +2,7 @@
 
 An installable server plugin that adds **38 discovery shelves** to **Home Screen Sections 3.0.2.0** on **Jellyfin 10.11.11**. Shelves offer different reasons to watch your local media: time available, mood, quality, recognition, complete stories and themes.
 
-Version **1.0.3**, built and verified on **11 October 2026, Australia/Perth**. The authoritative project folder is `/home/diverse/Projects/jellyfin-plugin-discovery-rows`.
+Version **1.0.3**. Built and verified for the versions above.
 
 ## Install and use
 

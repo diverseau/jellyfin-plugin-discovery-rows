@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Deterministic>true</Deterministic>
+    <PathMap>$(MSBuildThisFileDirectory)=/_/</PathMap>
     <Version>1.0.3</Version>
     <Authors>Discovery Rows contributors</Authors>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>

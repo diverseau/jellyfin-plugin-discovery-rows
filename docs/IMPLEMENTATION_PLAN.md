@@ -1,8 +1,6 @@
 # Implementation plan
 
-Authoritative workspace: `/home/diverse/Projects/jellyfin-plugin-discovery-rows`.
-
-Target: **Jellyfin 10.11.11, HSS 3.0.2.0, Jellyfin Web 10.11.11**. Plugin name: **Discovery Rows**. Date: **11 October 2026, Australia/Perth**. This is the original design record; version 1.0.0 is now implemented. See [verification](VERIFICATION.md) for the actual shipped scope and runtime evidence.
+Target: **Jellyfin 10.11.11, HSS 3.0.2.0, Jellyfin Web 10.11.11**. Plugin name: **Discovery Rows**. Date: **11 October 2026**. This is the original design record; version 1.0.0 is now implemented. See [verification](VERIFICATION.md) for the actual shipped scope and runtime evidence.
 
 The release-specific evidence and its limits are in [Research](RESEARCH.md); row requirements are in [Catalogue](ROW_CATALOGUE.md); implementation tickets are in [Backlog](BACKLOG.md). Source revisions and URLs are pinned in [source-lock.json](research/source-lock.json).
 

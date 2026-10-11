@@ -1,6 +1,6 @@
 # Research findings
 
-Research date: **11 October 2026, Australia/Perth**. Target supplied by the owner: **Jellyfin 10.11.11 / HSS 3.0.2.0**. Findings below were recorded from primary documentation and pinned source before building the plugin. Runtime evidence from the subsequent implementation is in [verification](VERIFICATION.md).
+Research date: **11 October 2026**. Compatibility target: **Jellyfin 10.11.11 / HSS 3.0.2.0**. Findings below were recorded from primary documentation and pinned source before building the plugin. Runtime evidence from the subsequent implementation is in [verification](VERIFICATION.md).
 
 ## Feasibility
 
@@ -19,7 +19,7 @@ A standalone HSS extension can supply stable shelves and personalized contents. 
 
 The HSS release notes explicitly retain Jellyfin 10.11.11 support and suspend Streamyfin patching. Its release assembly attribute remains `3.0.0.0`; checking only `Assembly.GetName().Version` cannot establish that package 3.0.2.0 is installed. Use plugin/package metadata plus capability checks. [HSS release](https://github.com/IAmParadox27/jellyfin-plugin-home-sections/releases/tag/3.0.2.0), [publisher manifest](https://www.iamparadox.dev/jellyfin/plugins/manifest.json), [assembly attributes](https://github.com/IAmParadox27/jellyfin-plugin-home-sections/blob/d9798e410cacd4b8fbac4f57fcf3d5c05dd42dbd/src/Jellyfin.Plugin.HomeScreenSections/Properties/AssemblyInfo.cs).
 
-Jellyfin's latest release endpoint currently resolves to 12.2. The implementation remains on the owner's requested 10.11.11; a 12.x build is a later compatibility task. [Current release endpoint](https://github.com/jellyfin/jellyfin/releases/latest).
+Jellyfin's latest release endpoint currently resolves to 12.2. The implementation remains on the supported 10.11.11; a 12.x build is a later compatibility task. [Current release endpoint](https://github.com/jellyfin/jellyfin/releases/latest).
 
 ## HSS's actual extension contract
 
@@ -75,8 +75,8 @@ The official plugin template demonstrates `BasePlugin<PluginConfiguration>`, emb
 
 ## What remains experimental
 
-The first build must establish reflected JObject construction across load contexts, handler DI resolution, authenticated HttpContext availability, persistent HSS settings, CSS-safe IDs, empty-row rendering, and native DTO navigation/playback. Static inspection supports the approach but cannot certify those runtime behaviors. Larger scale latency, metadata coverage, and recommendation quality also require fixtures and the owner's real library after the prototype works.
+The first build must establish reflected JObject construction across load contexts, handler DI resolution, authenticated HttpContext availability, persistent HSS settings, CSS-safe IDs, empty-row rendering, and native DTO navigation/playback. Static inspection supports the approach but cannot certify those runtime behaviors. Larger scale latency, metadata coverage, and recommendation quality also require fixtures and representative production libraries.
 
 ## 1.0.3 usability revision
 
-The user rejected per-title labelling as impractical. The original manual-first recommendation is superseded for normal mood/theme discovery: use explainable local genre/tag/year rules plus cached TMDB keywords, make reviewed labels optional overrides, and provide a one-click candidate-based shelf selection. This does not turn metadata into factual awards or a claim about a pilot's quality. An ended provider-identified miniseries may qualify for a one-night/weekend file/time check after full episode reconciliation, with no narrative-ending guarantee. A model-based classifier was not selected because it would add a service/model requirement and uncertain output when useful local catalogue signals are already available. See [automatic matching](AUTOMATIC_MATCHING.md) for the implemented choice.
+Per-title labelling is impractical for larger libraries. The original manual-first recommendation is superseded for normal mood/theme discovery: use explainable local genre/tag/year rules plus cached TMDB keywords, make reviewed labels optional overrides, and provide a one-click candidate-based shelf selection. This does not turn metadata into factual awards or a claim about a pilot's quality. An ended provider-identified miniseries may qualify for a one-night/weekend file/time check after full episode reconciliation, with no narrative-ending guarantee. A model-based classifier was not selected because it would add a service/model requirement and uncertain output when useful local catalogue signals are already available. See [automatic matching](AUTOMATIC_MATCHING.md) for the implemented choice.
