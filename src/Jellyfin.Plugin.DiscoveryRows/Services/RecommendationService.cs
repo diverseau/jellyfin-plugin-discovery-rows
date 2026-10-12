@@ -93,6 +93,8 @@ public sealed class RecommendationService : IDisposable
             var items = results.Select(i => _library.GetItemById(row.Selector == SelectorKind.FirstSeason ? i.FirstSeasonId!.Value : i.Id))
                 .Where(i => i is not null && i.IsVisibleStandalone(user)).Select(i => i!).ToArray();
             if (items.Length < settings.Minimum) return Empty();
+            // Selection stays stable for the cache period; only the order changes on every homepage load.
+            if (config.ShuffleRowOrder) Random.Shared.Shuffle(items);
             var dtos = _dto.GetBaseItemDtos(items, new DtoOptions { Fields = [ItemFields.PrimaryImageAspectRatio, ItemFields.MediaSourceCount, ItemFields.Genres, ItemFields.ProviderIds] }, user);
             if (revision != Interlocked.Read(ref _revision)) return Empty();
             if (recordDelivery) _history.Record(userId, results.Select(i => i.WorkKey), DateTimeOffset.UtcNow);

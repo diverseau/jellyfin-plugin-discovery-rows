@@ -88,11 +88,11 @@ Use **Discovery preferences** in the user menu (Plugin Pages) to find titles and
 
 **First user selection reverts:** on a fresh HSS 3.0.2.0 install, its first per-user Modular Home save can create an empty settings file without saving the selection. Reopen Modular Home and save again. This was observed in the fixture and matches the [tagged HSS save implementation](https://github.com/IAmParadox27/jellyfin-plugin-home-sections/blob/d9798e410cacd4b8fbac4f57fcf3d5c05dd42dbd/src/Jellyfin.Plugin.HomeScreenSections/HomeScreen/HomeScreenManager.cs). Discovery Rows honors the effective selection once persisted and does not modify HSS's private settings files.
 
-**Index empty/stale:** run the rebuild task and inspect Jellyfin logs. Only actual local playable records are included; remote channels, missing files and placeholders are excluded. A refresh failure retains the preceding snapshot.
+**Index empty/stale:** the index is rebuilt automatically on server startup, after every **Scan media library** run, when library items change and at least every six hours. Run the rebuild task and inspect Jellyfin logs if it still looks stale. Only actual local playable records are included; remote channels, missing files and placeholders are excluded. A refresh failure retains the preceding snapshot.
 
 **Wrong/generic settings labels:** status should show label compatibility initialized. The bridge supplies English fallback names in HSS's in-memory language packs. Restart or rebuild; this version does not claim localized shelf translations.
 
-**Too much repetition:** enable coordination and confirm effective HSS layout is available. Deduplication covers selected Discovery Rows shelves, not unrelated HSS sections. Repeated refreshes within a daily bucket intentionally preserve order.
+**Too much repetition:** enable coordination and confirm effective HSS layout is available. Deduplication covers selected Discovery Rows shelves, not unrelated HSS sections. Repeated refreshes within a daily bucket keep the same titles; their order inside each shelf is shuffled on every page load unless **Shuffle the order of titles in each shelf** is turned off.
 
 **Cannot start a complete-story row:** check episode numbering/order, every required episode's local availability/access, manifest freshness, total duration and reviewed story completeness. A satisfying narrative ending cannot be inferred from file counts.
 

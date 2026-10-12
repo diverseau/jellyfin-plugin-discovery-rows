@@ -7,7 +7,7 @@ public sealed class RefreshTask(LibrarySnapshotService index, HssBridge hss, Rec
 {
     public string Name => "Discovery Rows: rebuild local index";
     public string Key => "DiscoveryRowsRefresh";
-    public string Description => "Refresh local discovery data and retry Home Screen Sections registration.";
+    public string Description => "Refresh local discovery data and retry Home Screen Sections registration. Also runs automatically on server startup, after every library scan and when library items change.";
     public string Category => "Discovery Rows";
     public IEnumerable<TaskTriggerInfo> GetDefaultTriggers() => [new() { Type = TaskTriggerInfoType.IntervalTrigger, IntervalTicks = TimeSpan.FromHours(6).Ticks }];
     public async Task ExecuteAsync(IProgress<double> progress, CancellationToken cancellationToken)
